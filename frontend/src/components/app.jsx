@@ -44,6 +44,7 @@ const MyApp = () => {
       store: store,
       // App routes
       routes: routes,
+      
   };
   const alertLoginData = () => {
     f7.dialog.alert('Username: ' + username + '<br>Password: ' + password, () => {
@@ -82,7 +83,7 @@ const MyApp = () => {
 
 
         {/* Your main view, should have "view-main" class */}
-        <View main className="safe-areas" url="/" />
+        <View main className="safe-areas" url="/" browserHistory={true} browserHistorySeparator='app'/>
 
       {/* Popup */}
       <Popup id="my-popup">
