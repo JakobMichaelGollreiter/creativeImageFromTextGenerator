@@ -22,6 +22,7 @@ import {
   Icon,
 } from "framework7-react";
 import { append } from "dom7";
+import ExplanationBlock from "../components/explanationBlock";
 
 const HomePage = () => (
   <Page name="home">
@@ -54,25 +55,16 @@ const HomePage = () => (
     </Toolbar> */}
     {/* Page content */}
 
-    <Block strong>
-      <p>
-        Mit <b>WoDone</b> kannst du Bilder ganzer Fantasy-Welten erstellen, die
-        dich beim Entwerfen von Geschichten und Storylines inspirieren und
-        unterstützen.
-      </p>
-      <p>
-        Die Bilder werden dabei anhand deiner Präferenzen immer besser und
-        passender. Um deine Präferenzen mitzuteilen, halte auf einem Bild
-        gedrückt, um es zu liken. Alle gelikten Bilder kannst du dir später in
-        deiner Suchhistorie anschauen.
-      </p>
-    </Block>
+    { f7.device.desktop &&
+      <ExplanationBlock>
+        </ExplanationBlock>
+    }
 
     <BlockTitle>Suchbegriff eingeben</BlockTitle>
     <List noHairlinesMd>
       <ListInput
         type="text"
-        placeholder="Schloss"
+        placeholder="Search"
         outline
         clearButton
       ></ListInput>
@@ -83,6 +75,12 @@ const HomePage = () => (
         <Button fill href="/generator/ID-TODO/generate/">Bilder Generieren</Button> {/* Hier fehlt eine Menge Logik: Zunächst muss ein neuer Eintrag im Suchverlauf erstellt werden (mit globaler ID aus dem Backend), dann erst darf auf die Bildgenerierung für diese ID verlinkt werden! */}
       </ListItem>
     </List>
+
+    {f7.device.desktop &&
+    <ExplanationBlock>
+      </ExplanationBlock>
+    }
+
     <List>
       <ListItem title="Suchverlauf" link="/history/">
         <Icon slot="media" f7="rectangle_stack_fill"></Icon>
