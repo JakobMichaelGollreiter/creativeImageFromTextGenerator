@@ -76,9 +76,9 @@ const HomePage = () => (
       </ListItem>
     </List>
 
-    {f7.device.desktop &&
-    <ExplanationBlock>
-      </ExplanationBlock>
+    { !f7.device.desktop &&
+      <ExplanationBlock>
+        </ExplanationBlock>
     }
 
     <List>
