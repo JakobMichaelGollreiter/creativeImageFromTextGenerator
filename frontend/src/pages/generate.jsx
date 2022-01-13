@@ -9,10 +9,6 @@ import '../css/generate.less';
 
 const Generate = () => {
 
-  /**
-   * Es wird durch das Liken immer erst das übernächste Bild beeinflusst. Will man das ändern:
-   * Beim Liken Nächstes (vorgerendertes) Bild anpassen über Class des swipers, id. Vorgang an Server melden. Aufpassen, dass es sich wirklich um das allerletzte Bild handelt.
-   */
   const photos = ['https://placekitten.com/800/800', 'https://placekitten.com/1024/1024'];
 
 
@@ -24,6 +20,7 @@ const Generate = () => {
         className="swiper-lazy"
       ></img>
       <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
+      {/* Hier ist eine Option für die Like - Funktion*/}
     </SwiperSlide>)
   }
   let maxIndex = 2000; // starts with 0
@@ -39,6 +36,8 @@ const Generate = () => {
     }
   }
 
+  /* Javascript benötigt die Like - Funktion ganz sicher auch*/
+
   return (
     
       
@@ -47,6 +46,7 @@ const Generate = () => {
       <Swiper modules={[Virtual]} spaceBetween={50} slidesPerView={1} virtual onActiveIndexChange={activeIndexChange} lazy={{loadPrevNext:false, checkInView: true}} onLazyImageLoad={()=>console.log("LOAD")}>
       {slides}
     </Swiper>
+    {/* Hier ist eine andere (vielleicht schwierigere) Option für die Like - Funktion. Oben zu <Swiper ...> muss ein event-Listener, der auf Lange Klicks (Maus) und lange Touches reagiert. */}
     </Page>
   );
 };
