@@ -1,5 +1,5 @@
 import { click } from "dom7";
-import { Navbar, Page, Swiper, SwiperSlide } from "framework7-react";
+import { Navbar, Page, Swiper, SwiperSlide, Icon, View } from "framework7-react";
 import React from "react";
 import { Virtual } from "swiper";
 import "../css/generate.less";
@@ -10,11 +10,17 @@ const Generate = () => {
   const makeSlide = function (index) {
     return (
       <SwiperSlide key={index} virtualIndex={index}>
-        <img
-          src={`https://placekitten.com/${index + 800}`}
-          className="swiper-lazy"
-        ></img>
-        <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
+        <div>
+          <div className="dark-overlay">
+            <img
+              src={`https://placekitten.com/${index + 800}`}
+              className="swiper-lazy"
+            >
+            </img>
+            <Icon slot="media" f7="heart_circle"></Icon>
+          </div>
+          <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
+        </div>
         {/* Hier ist eine Option für die Like - Funktion*/}
       </SwiperSlide>
     );
