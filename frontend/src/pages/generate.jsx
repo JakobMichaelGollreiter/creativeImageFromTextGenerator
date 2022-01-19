@@ -9,22 +9,28 @@ import { useState } from "react";
 
 const Generate = () => {
   const makeSlide = function (index) {
-    const [showOverlay, setShowOverlay] = useState(false)
+    const [showOverlay, setShowOverlay] = useState(false);
+    const swiperClick = function (c) {
+      setShowOverlay(!showOverlay);
+      like(index)
+    }
     return (
-      <SwiperSlide key={index} virtualIndex={index}>
-        <div>
-          <div className="dark-overlay">
-            <img
-              src={`https://placekitten.com/${index + 800}`}
-              className="swiper-lazy"
-              onDoubleClick={() => setShowOverlay(!showOverlay) }
-            ></img>
-            {!showOverlay && <Icon slot="media" f7="heart_circle" className="heart-icon" style={{ opacity: 0 }}></Icon>}
-            {showOverlay && <Icon slot="media" f7="heart_circle" className="heart-icon" style={{ opacity: 1 }}></Icon>}
-          </div>
-          <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
+      <SwiperSlide key={index} virtualIndex={index} onDoubleClick={() => setShowOverlay(!showOverlay)}>
+        <div className="heart-underlaying-image">
+        <img
+          src={`https://placekitten.com/${index + 800}`}
+          className="swiper-lazy"
+          style={showOverlay ? { opacity: 0.5 } : { opacity: 1 }}
+          alt="Bild wird geladen."
+        ></img>
         </div>
-        {/* Hier ist eine Option für die Like - Funktion*/}
+        <Icon
+          slot="media"
+          f7="heart_circle"
+          className="heart-icon"
+          style={showOverlay ? { opacity: 1 } : { opacity: 0 }}
+        ></Icon>
+        <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
       </SwiperSlide>
     );
   };
@@ -34,7 +40,7 @@ const Generate = () => {
   );
 
   const activeIndexChange = function (s) {
-    console.log(s);
+    //console.log(s);
     if (s.activeIndex >= maxIndex - 10) {
       slides.push(makeSlide(maxIndex + 1));
       s.update();
@@ -42,11 +48,9 @@ const Generate = () => {
     }
   };
 
-  const like = function (s) {
-    console.log(s)
+  const like = function (index) {
+    console.log("Es wurde geliked:", index)
   }
-
-  /* Javascript benötigt die Like - Funktion ganz sicher auch*/
 
   return (
     <Page>
@@ -58,12 +62,11 @@ const Generate = () => {
         virtual
         onActiveIndexChange={activeIndexChange}
         lazy={{ loadPrevNext: false, checkInView: true }}
-        onLazyImageLoad={() => console.log("LOAD")}
+        /*onLazyImageLoad={() => console.log("LOAD")} */
         onDoubleClick={like}
       >
         {slides}
       </Swiper>
-      {/* Hier ist eine andere (vielleicht schwierigere) Option für die Like - Funktion. Oben zu <Swiper ...> muss ein event-Listener, der auf Lange Klicks (Maus) und lange Touches reagiert. */}
     </Page>
   );
 };

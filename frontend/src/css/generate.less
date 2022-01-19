@@ -4,12 +4,42 @@
 	font-size: 18px;
 	line-height: 200px;
 	box-sizing: border-box;
-	//border: 10px solid #ccc;
+	align-content: center;
 }
-
+:scope{
+	--heart-icon-size: 200px;
+	--heart-icon-size-small: 50px;
+}
 .heart-icon {
-	color: rgb(255, 255, 255);
-	font-size: 200px;
+	color: red;
 	position: absolute;
-	transform: translate(-250%, -200%);
+	top: calc(50% - var(--heart-icon-size)/2);
+}
+@media (max-width:500px) { 
+	.heart-icon{
+		font-size: 40vw;
+	}
+}
+@media (min-width:500px) {
+	.heart-icon{
+		font-size: var(--heart-icon-size);
+	}
+}
+.heart-underlaying-image, .heart-icon{
+	transition: 0.3s;
+}
+.heart-underlaying-image{
+	width: 100%;
+	position: absolute;
+	height: 100%;
+}
+.heart-underlaying-image img{
+	max-width: 100%;
+}
+.heart-underlaying-image, .heart-underlaying-image img{
+	max-height: calc(100vh - var(--f7-navbar-height) - var(--f7-safe-area-top));
+}
+.swiper-container{
+	max-height: min(100%, 100vw);
+	height: 100%;
 }
