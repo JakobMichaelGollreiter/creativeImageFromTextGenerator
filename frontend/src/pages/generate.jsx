@@ -3,11 +3,13 @@ import { Navbar, Page, Swiper, SwiperSlide, Icon, View } from "framework7-react"
 import React from "react";
 import { Virtual } from "swiper";
 import "../css/generate.less";
+import { useState } from "react";
 
 //SwiperCore.use([Lazy]);
 
 const Generate = () => {
   const makeSlide = function (index) {
+    const [showOverlay, setShowOverlay] = useState(false)
     return (
       <SwiperSlide key={index} virtualIndex={index}>
         <div>
@@ -15,9 +17,10 @@ const Generate = () => {
             <img
               src={`https://placekitten.com/${index + 800}`}
               className="swiper-lazy"
-            >
-            </img>
-            <Icon slot="media" f7="heart_circle"></Icon>
+              onDoubleClick={() => setShowOverlay(!showOverlay) }
+            ></img>
+            {!showOverlay && <Icon slot="media" f7="heart_circle" className="heart-icon" style={{ opacity: 0 }}></Icon>}
+            {showOverlay && <Icon slot="media" f7="heart_circle" className="heart-icon" style={{ opacity: 1 }}></Icon>}
           </div>
           <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
         </div>
@@ -41,7 +44,6 @@ const Generate = () => {
 
   const like = function (s) {
     console.log(s)
-    console.log('clickedIndex: ', s.clickedIndex)
   }
 
   /* Javascript benötigt die Like - Funktion ganz sicher auch*/
