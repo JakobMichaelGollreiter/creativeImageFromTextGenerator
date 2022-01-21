@@ -55,10 +55,7 @@ const HomePage = () => (
     </Toolbar> */}
     {/* Page content */}
 
-    { f7.device.desktop &&
-      <ExplanationBlock>
-        </ExplanationBlock>
-    }
+    {f7.device.desktop && <ExplanationBlock></ExplanationBlock>}
 
     <BlockTitle>Suchbegriff eingeben</BlockTitle>
     <List noHairlinesMd>
@@ -72,14 +69,14 @@ const HomePage = () => (
         <span
           style={{ display: f7.device.desktop ? "none" : "default" }}
         ></span>
-        <Button fill href="/generator/ID-TODO/generate/">Bilder Generieren</Button> {/* Hier fehlt eine Menge Logik: Zunächst muss ein neuer Eintrag im Suchverlauf erstellt werden (mit globaler ID aus dem Backend), dann erst darf auf die Bildgenerierung für diese ID verlinkt werden! */}
+        <Button fill href="/generator/ID-TODO/generate/">
+          Bilder Generieren
+        </Button>{" "}
+        {/* Hier fehlt eine Menge Logik: Zunächst muss ein neuer Eintrag im Suchverlauf erstellt werden (mit globaler ID aus dem Backend), dann erst darf auf die Bildgenerierung für diese ID verlinkt werden! */}
       </ListItem>
     </List>
 
-    { !f7.device.desktop &&
-      <ExplanationBlock>
-        </ExplanationBlock>
-    }
+    {!f7.device.desktop && <ExplanationBlock></ExplanationBlock>}
 
     <List>
       <ListItem title="Suchverlauf" link="/history/">
