@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  database:
+    image: mariadb
+    container_name: wodone_database
+    restart: always
+    volumes:
+      - database:/var/lib/mysql
+    env_file:
+      - ./environment.env
+    networks:
+      - wodone_database_net
+
+  api:
+    build: backend/
+    container_name: wodone_backend
+    links:
+      - database
+    restart: always
+    ports:
+       - 127.0.0.1:8081:80
+    env_file:
+      - ./environment.env
+    networks:
+      - wodone
+      - wodone_database_net
+
+  webfrontend:
+    build: frontend/
+    container_name: wodone_frontend
+    restart: always
+    ports:
+      - 8080:80
+    env_file:
+      - ./environment.env
+    networks:
+      - wodone
+
+volumes:
+  database:
+
+networks:
+  wodone:
+  wodone_database_net:

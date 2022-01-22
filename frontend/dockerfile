@@ -1,0 +1,14 @@
+FROM node:lts-bullseye AS compile-node
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN mkdir /buildfolder
+ADD frontend /buildfolder 
+WORKDIR /buildfolder
+RUN npm install
+RUN npm run build
+
+FROM nginx:stable-alpine
+
+COPY --from=compile-node /buildfolder/www/ /usr/share/nginx/html/
+COPY ./default.conf /etc/nginx/conf.d/

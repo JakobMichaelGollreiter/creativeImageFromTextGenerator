@@ -1,6 +1,6 @@
 from flask import Flask, json, jsonify, request
 from main import api
-@api.route('/generators', methods=['POST', 'GET']) #Methods: GET, PUT, POST, DELETE, ...
+@api.route('/api/generators', methods=['POST', 'GET']) #Methods: GET, PUT, POST, DELETE, ...
 def generators_function():
 	if request.method == 'POST':
 		# Add new generator to database with given keyword and return its id
@@ -16,7 +16,7 @@ def generators_function():
 		}), 501 #should be 200
 
 
-@api.route("/generators/<generatorID>", methods=["DELETE"])
+@api.route("/api/generators/<generatorID>", methods=["DELETE"])
 def deleteGenerator(generatorID):
 	if request.method == "DELETE":
 		# Delete generator
