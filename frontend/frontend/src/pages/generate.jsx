@@ -84,7 +84,10 @@ export default function App() {
         //onActiveIndexChange={activeIndexChange}
         virtual
         lazy={{ loadPrevNext: false, checkInView: true }}
-        //onLazyImageLoad={() => console.log("LOAD")} 
+        //onLazyImageLoad={() => console.log("LOAD")}
+        navigation
+        mousewheel
+        keyboard
       >
         {slides}
       </Swiper>
