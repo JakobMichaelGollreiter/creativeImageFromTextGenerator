@@ -1,0 +1,9 @@
+This file contains a list of the different search layers we will use for our interactive search promt
+
+1.layer: "The input text from the user (Frontend)"
+
+2.layer (colours) : red|blue|green|yellow|orange|purple|black|white
+
+3.layer (game themes) : (fortnite|cyberpunk|mario|amongus|skyrim)
+
+4.layer (height?) : (small|big|tiny|giant)
