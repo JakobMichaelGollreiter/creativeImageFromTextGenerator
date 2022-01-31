@@ -35,6 +35,8 @@ import imageio
 from PIL import ImageFile, Image
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+from wodone_mod_words import wodone_words
+
 def sinc(x):
     return torch.where(x != 0, torch.sin(math.pi * x) / (math.pi * x), x.new_ones([]))
 
@@ -226,7 +228,6 @@ model_name = "vqgan_imagenet_f16_16384"
 seed = 42
 
 texts = str(sys.argv[1])
-#TODO something like "for i in argv concatenate strings"
 width = 300 
 height = 300 
 init_image = "" 
@@ -288,11 +289,19 @@ else:
     model_target_images = target_images.split("|")
     model_target_images = [image.strip() for image in model_target_images]
 
-#TODO insert model texts here?
 model_texts = [phrase.strip() for phrase in texts.split("|")]
+
+#add dictionary words from cmdargs
+print(type(texts))
+for wordindex in sys.argv[2::]:
+    print("appending " + wordindex)
+    model_texts.append(wodone_words[int(wordindex)])
+
 if model_texts == ['']:
     model_texts = []
 
+print("model_texts type:")
+print(type(model_texts))
 
 args = argparse.Namespace(
     prompts=model_texts,
