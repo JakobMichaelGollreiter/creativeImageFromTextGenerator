@@ -244,7 +244,7 @@ if target_image_icon:
 
 learning_rate = 0.2 
 max_steps = 100 
-images_interval = 100 
+images_interval = 9999 # set to higher number than max_steps to disable
 
 gen_config = {
     "texts": texts,
@@ -258,8 +258,15 @@ gen_config = {
     "model": "vqgan_imagenet_f16_16384"
 }
 
-#title Start AI Image Generation!
+#title Start AI Image Generation! ##########################################################
 
+#TODO absolute image path
+imgname = sys.argv[1].replace(' ','') #TODO maybe regular expression
+imgpath = "./images/" + imgname
+for wordindex in sys.argv[2::]:
+    imgpath = imgpath + "/" + wodone_words[int(wordindex)]
+    
+Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
 
 metadata = PngInfo()
 for k, v in gen_config.items():
@@ -292,9 +299,7 @@ else:
 model_texts = [phrase.strip() for phrase in texts.split("|")]
 
 #add dictionary words from cmdargs
-print(type(texts))
 for wordindex in sys.argv[2::]:
-    print("appending " + wordindex)
     model_texts.append(wodone_words[int(wordindex)])
 
 if model_texts == ['']:
@@ -448,14 +453,21 @@ def ascend_txt():
     img = Image.fromarray(img)
     # imageio.imwrite(f'./steps/{i:03d}.png', np.array(img))
 
-    img.save(f"./steps/{i:03d}.png", pnginfo=metadata) 
+    #img.save(f"./steps/{i:03d}.png", pnginfo=metadata)
+    
+    img.save(imgpath + f"/steps/{i:03d}.png", pnginfo=metadata) 
     return result
 
 def train(i):
     opt.zero_grad()
     lossAll = ascend_txt()
-    if i % args.display_freq == 0:
-        checkin(i, lossAll)
+    #periodically give status, every {images_interval} images (theoretically unneccessary)
+    #if i % args.display_freq == 0:
+        #checkin(i, lossAll)
+
+    #save image on every step
+    out = synth(z)
+    TF.to_pil_image(out[0].cpu()).save(imgpath + "/image.png", pnginfo=metadata)
     
     loss = sum(lossAll)
     loss.backward()
@@ -464,9 +476,17 @@ def train(i):
     with torch.no_grad():
         z.copy_(z.maximum(z_min).minimum(z_max))
 
+########## "main" ##########################################
+
+#add "unfinished" flag (kinda)
+os.system("touch " + imgpath + "/unfinished")
+
 try:
     for i in tqdm(range(max_steps)):
           train(i)
-    checkin(max_steps, ascend_txt())
+    # save final image to progress.png
+    #checkin(max_steps, ascend_txt()) 
 except KeyboardInterrupt:
     pass
+
+os.system("rm " + imgpath + "/unfinished")
