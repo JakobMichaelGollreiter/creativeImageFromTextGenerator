@@ -12,12 +12,18 @@ def get_image(prompt, modifiers):
 
     imgfilepath = Path(imgpath + "/image.png")
     if imgfilepath.exists():
-        print("Image already generated")
+        if Path(imgpath + "/unfinished").exists():
+            print("Image is currently being generated, please be patient")
+            status = 1
+        else:
+            print("Found image")
+            status = 0
     else:
-        print("Not found, generating image")
+        print("Not found, generating new image")
+        status = 1
         modifierstring = ""
         for mod in modifiers:
             modifierstring = modifierstring + " " + str(mod)
         os.system("python3 generate_image.py \"" + str(prompt) + "\"" + modifierstring + " &")        
         
-    return imgfilepath
+    return imgfilepath, status
