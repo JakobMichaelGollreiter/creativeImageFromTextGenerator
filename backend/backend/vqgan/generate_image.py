@@ -215,50 +215,7 @@ def resize_image(image, out_size):
     return image.resize(size, Image.LANCZOS)
 
 
-"""## AI Image Generation Settings
-
-The following cell allows you to set the training parameters for image generation:
-
-### Generation Settings
-"""
-
-# Fixed parameters
-icon_path = "icon.png"
-model_name = "vqgan_imagenet_f16_16384"
-seed = 42
-
-texts = str(sys.argv[1])
-width = 300 
-height = 300 
-init_image = "" 
-init_image_icon = False
-if init_image_icon:
-  assert os.path.exists(icon_path), "No icon has been generated from the previous cell"
-  init_image = icon_path
-
-target_images = ""
-target_image_icon = False 
-if target_image_icon:
-  assert os.path.exists(icon_path), "No icon has been generated from the previous cell"
-  target_images = icon_path
-
-learning_rate = 0.2 
-max_steps = 100 
-images_interval = 9999 # set to higher number than max_steps to disable
-
-gen_config = {
-    "texts": texts,
-    "width": width,
-    "height": height,
-    "init_image": "<icon>" if init_image_icon else init_image,
-    "target_images": "<icon>" if target_image_icon else target_images,
-    "learning_rate": learning_rate,
-    "max_steps": max_steps,
-    "training_seed": 42,
-    "model": "vqgan_imagenet_f16_16384"
-}
-
-#title Start AI Image Generation! ##########################################################
+########################## PARAMETERS FROM CMDLINE ARE PARSED HERE ##########################
 
 #TODO absolute image path
 imgname = sys.argv[1].replace(' ','') #TODO maybe regular expression
@@ -268,17 +225,35 @@ for wordindex in sys.argv[2::]:
     
 Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
 
+# Fixed parameters
+model_name = "vqgan_imagenet_f16_16384"
+seed = 42
+
+texts = str(sys.argv[1])
+width = 300 
+height = 300 
+learning_rate = 0.2 
+max_steps = 100 
+images_interval = 9999 # set to higher number than max_steps to disable
+
+gen_config = {
+    "texts": texts,
+    "width": width,
+    "height": height,
+    "init_image": "",
+    "target_images": "",
+    "learning_rate": learning_rate,
+    "max_steps": max_steps,
+    "training_seed": 42,
+    "model": "vqgan_imagenet_f16_16384"
+}
+
+#parse parameters
+
 metadata = PngInfo()
 for k, v in gen_config.items():
     try:
         metadata.add_text("AI_ " + k, str(v))
-    except UnicodeEncodeError:
-        pass
-
-if init_image_icon or target_image_icon:
-  for k, v in icon_config.items():
-    try:
-        metadata.add_text("AI_Icon_ " + k, str(v))
     except UnicodeEncodeError:
         pass
 
@@ -288,14 +263,8 @@ name_model = model_names[model_name]
 
 if seed == -1:
     seed = None
-if init_image == "None":
-    init_image = None
-if target_images == "None" or not target_images:
-    model_target_images = []
-else:
-    model_target_images = target_images.split("|")
-    model_target_images = [image.strip() for image in model_target_images]
-
+init_image = None
+model_target_images = []
 model_texts = [phrase.strip() for phrase in texts.split("|")]
 
 #add dictionary words from cmdargs
@@ -304,9 +273,6 @@ for wordindex in sys.argv[2::]:
 
 if model_texts == ['']:
     model_texts = []
-
-print("model_texts type:")
-print(type(model_texts))
 
 args = argparse.Namespace(
     prompts=model_texts,
@@ -397,8 +363,6 @@ scheduler = StepLR(opt, step_size=5, gamma=0.95)
 
 normalize = transforms.Normalize(mean=[0.48145466, 0.4578275, 0.40821073],
                                 std=[0.26862954, 0.26130258, 0.27577711])
-
-
 
 pMs = []
 
