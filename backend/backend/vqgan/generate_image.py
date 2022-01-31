@@ -229,12 +229,11 @@ Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
 model_name = "vqgan_imagenet_f16_16384"
 seed = 42
 
-texts = str(sys.argv[1])
+texts = sys.argv[1]
 width = 300 
 height = 300 
 learning_rate = 0.2 
 max_steps = 100 
-images_interval = 9999 # set to higher number than max_steps to disable
 
 gen_config = {
     "texts": texts,
@@ -288,7 +287,6 @@ args = argparse.Namespace(
     step_size=learning_rate,
     cutn=32,
     cut_pow=1.,
-    display_freq=images_interval,
     seed=seed,
 )
 from urllib.request import urlopen
@@ -425,9 +423,6 @@ def ascend_txt():
 def train(i):
     opt.zero_grad()
     lossAll = ascend_txt()
-    #periodically give status, every {images_interval} images (theoretically unneccessary)
-    #if i % args.display_freq == 0:
-        #checkin(i, lossAll)
 
     #save image on every step
     out = synth(z)
