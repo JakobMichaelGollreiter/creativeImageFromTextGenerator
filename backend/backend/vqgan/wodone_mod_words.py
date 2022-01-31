@@ -1,4 +1,4 @@
-wodone_words = [
+wodone_adjectives = [
     "red", "green", "blue", "yellow", "orange", "purple", "magenta", "cyan", "black", "white",
     "big", "small", "tiny", "huge", "giant",
     #"skyrim", "witcher", "dishonored", "half life", "portal",

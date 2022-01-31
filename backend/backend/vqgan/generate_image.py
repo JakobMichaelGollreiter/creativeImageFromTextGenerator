@@ -35,7 +35,7 @@ import imageio
 from PIL import ImageFile, Image
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-from wodone_mod_words import wodone_words
+from wodone_mod_words import wodone_adjectives
 
 def sinc(x):
     return torch.where(x != 0, torch.sin(math.pi * x) / (math.pi * x), x.new_ones([]))
@@ -221,7 +221,7 @@ def resize_image(image, out_size):
 imgname = sys.argv[1].replace(' ','') #TODO maybe regular expression
 imgpath = "./images/" + imgname
 for wordindex in sys.argv[2::]:
-    imgpath = imgpath + "/" + wodone_words[int(wordindex)]
+    imgpath = imgpath + "/" + wodone_adjectives[int(wordindex)]
     
 Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
 
@@ -230,6 +230,11 @@ model_name = "vqgan_imagenet_f16_16384"
 seed = 42
 
 texts = sys.argv[1]
+### prepend adjectives before prompt
+for wordindex in sys.argv[2::]:
+    texts = wodone_adjectives[int(wordindex)] + " " + texts
+
+
 width = 300 
 height = 300 
 learning_rate = 0.2 
@@ -266,9 +271,9 @@ init_image = None
 model_target_images = []
 model_texts = [phrase.strip() for phrase in texts.split("|")]
 
-#add dictionary words from cmdargs
-for wordindex in sys.argv[2::]:
-    model_texts.append(wodone_words[int(wordindex)])
+###add dictionary words from cmdargs as multiple prompts
+#for wordindex in sys.argv[2::]:
+    #model_texts.append(wodone_words[int(wordindex)])
 
 if model_texts == ['']:
     model_texts = []
