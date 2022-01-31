@@ -225,9 +225,10 @@ icon_path = "icon.png"
 model_name = "vqgan_imagenet_f16_16384"
 seed = 42
 
-texts = 'cyberpunk forest by Salvador Dali'
-width = 200 
-height = 200 
+texts = str(sys.argv[1])
+#TODO something like "for i in argv concatenate strings"
+width = 300 
+height = 300 
 init_image = "" 
 init_image_icon = False
 if init_image_icon:
@@ -241,8 +242,8 @@ if target_image_icon:
   target_images = icon_path
 
 learning_rate = 0.2 
-max_steps = 200 
-images_interval = 50 
+max_steps = 100 
+images_interval = 100 
 
 gen_config = {
     "texts": texts,
@@ -287,6 +288,7 @@ else:
     model_target_images = target_images.split("|")
     model_target_images = [image.strip() for image in model_target_images]
 
+#TODO insert model texts here?
 model_texts = [phrase.strip() for phrase in texts.split("|")]
 if model_texts == ['']:
     model_texts = []
@@ -437,7 +439,7 @@ def ascend_txt():
     img = Image.fromarray(img)
     # imageio.imwrite(f'./steps/{i:03d}.png', np.array(img))
 
-    img.save(f"./steps/{i:03d}.png", pnginfo=metadata)
+    img.save(f"./steps/{i:03d}.png", pnginfo=metadata) 
     return result
 
 def train(i):
