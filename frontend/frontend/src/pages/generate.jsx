@@ -1,9 +1,9 @@
-import { click } from "dom7";
-import { Navbar, Page, Swiper, SwiperSlide, Icon, View } from "framework7-react";
+import { click, show } from "dom7";
+import { Navbar, Page, Swiper, SwiperSlide, Icon } from "framework7-react";
 import React from "react";
 import SwiperCore, { Lazy, Virtual } from 'swiper';
 import "../css/generate.less";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 SwiperCore.use([Virtual, Lazy]);
 
@@ -33,18 +33,27 @@ export default function App() {
   */
 
   const makeSlide = function (index) {
-    const [showOverlay, setShowOverlay] = useState(false);
+    const [showLike, setShowLike] = useState(false);
     const swiperClick = function (c) {
-      setShowOverlay(!showOverlay);
+      console.log("liked")
+      setShowLike(!showLike);
       like(index)
     }
+
+    //const enterPress = useKeyPress();
+
     return (
-      <SwiperSlide index={index} key={index} virtualIndex={index} onDoubleClick={() => setShowOverlay(!showOverlay)}>
+      <SwiperSlide 
+        index={index} 
+        key={index} 
+        virtualIndex={index} 
+        onDoubleClick={() => setShowLike(!showLike)}
+        >
         <div className="heart-underlaying-image">
         <img
           src={`https://placekitten.com/${index + 800}`}
           className="swiper-lazy"
-          style={showOverlay ? { opacity: 0.5 } : { opacity: 1 }}
+          style={showLike ? { opacity: 0.7 } : { opacity: 1 }}
           alt="Bild wird geladen."
         ></img>
         </div>
@@ -52,16 +61,37 @@ export default function App() {
           slot="media"
           f7="heart_circle"
           className="heart-icon"
-          style={showOverlay ? { opacity: 1 } : { opacity: 0 }}
+          style={showLike ? { opacity: 1 } : { opacity: 0 }}
         ></Icon>
-        <div className="swiper-lazy-preloader swiper-lazy-preloader"></div>
+        <button className="likeBtn" onClick={() => setShowLike(!showLike)}>
+          <Icon
+            slot="media"
+            f7="heart_circle"
+            size={35}
+            style={showLike ? { color: "red" } : { color: "gray" }}
+            className="likeBtn-icon"
+          ></Icon>
+          Like
+        </button>
+        <div className="swiper-lazy-preloader swiper-lazy-preloader">
+        </div>
       </SwiperSlide>
     );
   };
+
+  /*{ window.addEventListener('keydown', event => {
+      if (event.code === 'Space') {
+        console.log("space bar pressed")
+        setShowOverlay(!showOverlay);
+      }
+    })
+  }*/
   
   const slides = Array.from({ length:  2000}).map(
     (_, index) => makeSlide(index)
-  );/*
+  );
+
+  /*
   //this does not work. So no more then 1000 slides possible.
   const activeIndexChange = function (s) {
     console.log("test")
@@ -69,6 +99,7 @@ export default function App() {
       swiperRef.virtual.appendSlide(makeSlide(slides.length));
     }
   };*/
+
   return (
     <Page>
       <Navbar title="WoDone Bildgenerierung" backLink="Zurück"></Navbar>
@@ -88,11 +119,42 @@ export default function App() {
         navigation
         mousewheel
         keyboard
+        onKeyPress={() => {
+          //console.log(swiperRef.activeIndex)
+          //console.log(slides[swiperRef.activeIndex])
+        }}
       >
         {slides}
       </Swiper>
     </Page>
   );
+}
+
+function useKeyPress() {
+
+  /*const [keyPressed, setKeyPressed] = useState(false);
+  function downHandler ({ key }) {
+    if (key == targetKey) {
+      setKeyPressed(true)
+    }
+  }
+
+  function upHandler ({ key }) {
+    if (key == targetKey) {
+      setKeyPressed(false)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("keydown", downHandler)
+    window.addEventListener("keyup", upHandler)
+    return () => {
+      window.removeEventListener("keydown", downHandler)
+      window.removeEventListener("keyup", upHandler)
+    };
+  }, []);*/
+
+  return
 }
 
 
