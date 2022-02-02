@@ -1,0 +1,5 @@
+backend/backend/vqgan/vqgan_imagenet_f16_16384.ckpt
+backend/backend/vqgan/vqgan_imagenet_f16_16384.yaml
+backend/backend/vqgan/CLIP
+backend/backend/vqgan/icon-image
+backend/backend/vqgan/taming-transformers

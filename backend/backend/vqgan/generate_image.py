@@ -35,6 +35,8 @@ import imageio
 from PIL import ImageFile, Image
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+from wodone_mod_words import wodone_adjectives
+
 def sinc(x):
     return torch.where(x != 0, torch.sin(math.pi * x) / (math.pi * x), x.new_ones([]))
 
@@ -213,63 +215,49 @@ def resize_image(image, out_size):
     return image.resize(size, Image.LANCZOS)
 
 
-"""## AI Image Generation Settings
+########################## PARAMETERS FROM CMDLINE ARE PARSED HERE ##########################
 
-The following cell allows you to set the training parameters for image generation:
-
-### Generation Settings
-"""
+#TODO absolute image path
+imgname = sys.argv[1].replace(' ','') #TODO maybe regular expression
+imgpath = "./images/" + imgname
+for wordindex in sys.argv[2::]:
+    imgpath = imgpath + "/" + wodone_adjectives[int(wordindex)]
+    
+Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
 
 # Fixed parameters
-icon_path = "icon.png"
 model_name = "vqgan_imagenet_f16_16384"
 seed = 42
 
-texts = 'cyberpunk forest by Salvador Dali'
-width = 200 
-height = 200 
-init_image = "" 
-init_image_icon = False
-if init_image_icon:
-  assert os.path.exists(icon_path), "No icon has been generated from the previous cell"
-  init_image = icon_path
+texts = sys.argv[1]
+### prepend adjectives before prompt
+for wordindex in sys.argv[2::]:
+    texts = wodone_adjectives[int(wordindex)] + " " + texts
 
-target_images = ""
-target_image_icon = False 
-if target_image_icon:
-  assert os.path.exists(icon_path), "No icon has been generated from the previous cell"
-  target_images = icon_path
 
+width = 300 
+height = 300 
 learning_rate = 0.2 
-max_steps = 200 
-images_interval = 50 
+max_steps = 100 
 
 gen_config = {
     "texts": texts,
     "width": width,
     "height": height,
-    "init_image": "<icon>" if init_image_icon else init_image,
-    "target_images": "<icon>" if target_image_icon else target_images,
+    "init_image": "",
+    "target_images": "",
     "learning_rate": learning_rate,
     "max_steps": max_steps,
     "training_seed": 42,
     "model": "vqgan_imagenet_f16_16384"
 }
 
-#title Start AI Image Generation!
-
+#parse parameters
 
 metadata = PngInfo()
 for k, v in gen_config.items():
     try:
         metadata.add_text("AI_ " + k, str(v))
-    except UnicodeEncodeError:
-        pass
-
-if init_image_icon or target_image_icon:
-  for k, v in icon_config.items():
-    try:
-        metadata.add_text("AI_Icon_ " + k, str(v))
     except UnicodeEncodeError:
         pass
 
@@ -279,18 +267,16 @@ name_model = model_names[model_name]
 
 if seed == -1:
     seed = None
-if init_image == "None":
-    init_image = None
-if target_images == "None" or not target_images:
-    model_target_images = []
-else:
-    model_target_images = target_images.split("|")
-    model_target_images = [image.strip() for image in model_target_images]
-
+init_image = None
+model_target_images = []
 model_texts = [phrase.strip() for phrase in texts.split("|")]
+
+###add dictionary words from cmdargs as multiple prompts
+#for wordindex in sys.argv[2::]:
+    #model_texts.append(wodone_words[int(wordindex)])
+
 if model_texts == ['']:
     model_texts = []
-
 
 args = argparse.Namespace(
     prompts=model_texts,
@@ -306,7 +292,6 @@ args = argparse.Namespace(
     step_size=learning_rate,
     cutn=32,
     cut_pow=1.,
-    display_freq=images_interval,
     seed=seed,
 )
 from urllib.request import urlopen
@@ -382,8 +367,6 @@ scheduler = StepLR(opt, step_size=5, gamma=0.95)
 normalize = transforms.Normalize(mean=[0.48145466, 0.4578275, 0.40821073],
                                 std=[0.26862954, 0.26130258, 0.27577711])
 
-
-
 pMs = []
 
 for prompt in args.prompts:
@@ -437,14 +420,18 @@ def ascend_txt():
     img = Image.fromarray(img)
     # imageio.imwrite(f'./steps/{i:03d}.png', np.array(img))
 
-    img.save(f"./steps/{i:03d}.png", pnginfo=metadata)
+    #img.save(f"./steps/{i:03d}.png", pnginfo=metadata)
+    
+    img.save(imgpath + f"/steps/{i:03d}.png", pnginfo=metadata) 
     return result
 
 def train(i):
     opt.zero_grad()
     lossAll = ascend_txt()
-    if i % args.display_freq == 0:
-        checkin(i, lossAll)
+
+    #save image on every step
+    out = synth(z)
+    TF.to_pil_image(out[0].cpu()).save(imgpath + "/image.png", pnginfo=metadata)
     
     loss = sum(lossAll)
     loss.backward()
@@ -453,9 +440,17 @@ def train(i):
     with torch.no_grad():
         z.copy_(z.maximum(z_min).minimum(z_max))
 
+########## "main" ##########################################
+
+#add "unfinished" flag (kinda)
+os.system("touch " + imgpath + "/unfinished")
+
 try:
     for i in tqdm(range(max_steps)):
           train(i)
-    checkin(max_steps, ascend_txt())
+    # save final image to progress.png
+    #checkin(max_steps, ascend_txt()) 
 except KeyboardInterrupt:
     pass
+
+os.system("rm " + imgpath + "/unfinished")
