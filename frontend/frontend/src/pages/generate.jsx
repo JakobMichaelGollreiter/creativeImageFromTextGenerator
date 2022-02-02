@@ -51,7 +51,7 @@ export default function App() {
         >
         <div className="heart-underlaying-image">
         <img
-          src={`https://placekitten.com/${index + 800}`}
+          src={`https://placekitten.com/${index + 800}`} //must be loading.gif!
           className="swiper-lazy"
           style={showLike ? { opacity: 0.7 } : { opacity: 1 }}
           alt="Bild wird geladen."
