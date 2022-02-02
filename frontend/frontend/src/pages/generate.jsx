@@ -42,7 +42,7 @@ export default function App() {
       <SwiperSlide index={index} key={index} virtualIndex={index} onDoubleClick={() => setShowOverlay(!showOverlay)}>
         <div className="heart-underlaying-image">
         <img
-          src={`https://placekitten.com/${index + 800}`}
+          src={`https://placekitten.com/${index + 800}`} //must be loading.gif!
           className="swiper-lazy"
           style={showOverlay ? { opacity: 0.5 } : { opacity: 1 }}
           alt="Bild wird geladen."
@@ -84,7 +84,7 @@ export default function App() {
         //onActiveIndexChange={activeIndexChange}
         virtual
         lazy={{ loadPrevNext: false, checkInView: true }}
-        //onLazyImageLoad={() => console.log("LOAD")} 
+        onLazyImageLoad={() => console.log("LOAD")} 
       >
         {slides}
       </Swiper>
