@@ -1,16 +1,18 @@
 from flask import Flask, json, jsonify, request
 from main import api
+from vqgan.get_image import get_image
 @api.route("/api/requestimage", methods=["POST"])
 def requestImage():
 	data = request.json()
-	"""
-	data["searchString"]
-	data["reqArray"]
+	
+	#data["searchString"]
+	#data["reqArray"]
+ 
+    imPath, status = get_image(data["searchString"],data["reqArray"])
 
-		return jsonify({
-			"status": "",
-			"imgPath": ""
-		}), 200
-	"""
-	# Die Zeile hier unten muss dann natürlich weg.
-	return "Not Implemented", 501
+    return jsonify({
+        "status": status,
+        "imgPath": imgPath
+    }), 200
+	
+
