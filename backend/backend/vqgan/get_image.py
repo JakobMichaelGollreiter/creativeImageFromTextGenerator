@@ -1,5 +1,5 @@
 from pathlib import Path
-from wodone_mod_words import wodone_adjectives
+from vqgan.wodone_mod_words import wodone_adjectives
 import os
 
 databasepath = "./images"
