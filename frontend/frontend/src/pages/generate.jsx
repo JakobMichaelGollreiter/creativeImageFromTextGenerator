@@ -1,9 +1,9 @@
-import { click, show } from "dom7";
-import { Navbar, Page, Swiper, SwiperSlide, Icon } from "framework7-react";
-import React from "react";
+import { attr, click, show } from 'dom7';
+import { Navbar, Page, Swiper, SwiperSlide, Icon } from 'framework7-react';
+import React from 'react';
 import SwiperCore, { Lazy, Virtual } from 'swiper';
-import "../css/generate.less";
-import { useState, useEffect } from "react";
+import '../css/generate.less';
+import { useState, useEffect } from 'react';
 
 export default function App() {
 
@@ -92,7 +92,8 @@ export default function App() {
         virtualIndex={index} 
         onDoubleClick={like}
         >
-        <div className="heart-underlaying-image">
+        <button onClick={() => console.log(window.data)}>print searchText</button>
+        <div className='heart-underlaying-image'>
         <img
           src={slideData[index].src} //must be loading.gif!
           className="swiper-lazy"
@@ -106,10 +107,10 @@ export default function App() {
           className="heart-icon"
           style={slideData[index].like ? { opacity: 1 } : { opacity: 0 }}
         ></Icon>
-        <button className="likeBtn" onClick={() => setShowLike(!showLike)}>
+        <button className='likeBtn' onClick={() => setShowLike(!showLike)}>
           <Icon
-            slot="media"
-            f7="heart_circle"
+            slot='media'
+            f7='heart_circle'
             size={35}
             style={slideData[index].like ? { color: "red" } : { color: "gray" }}
             className="likeBtn-icon"
@@ -160,7 +161,7 @@ export default function App() {
 
   return (
     <Page>
-      <Navbar title="WoDone Bildgenerierung" backLink="Zurück"></Navbar>
+      <Navbar title='WoDone Bildgenerierung' backLink='Zurück'></Navbar>
       <Swiper
         onSwiper={setSwiperRef}
         slidesPerView={1}
