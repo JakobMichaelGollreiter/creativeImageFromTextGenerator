@@ -3,11 +3,7 @@ from main import api
 from vqgan.get_image import get_image
 @api.route("/api/requestimage", methods=["POST"])
 def requestImage():
-	data = request.json()
-	
-	#data["searchString"]
-	#data["reqArray"]
- 
+    data = request.json()
     imPath, status = get_image(data["searchString"],data["reqArray"])
 
     return jsonify({
