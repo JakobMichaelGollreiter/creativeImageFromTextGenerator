@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useDebugValue } from "react";
 import {
   Page,
   Navbar,
@@ -21,8 +21,13 @@ import {
   f7,
   Icon,
 } from "framework7-react";
-import { append } from "dom7";
+import { append, text, val, value } from "dom7";
 import ExplanationBlock from "../components/explanationBlock";
+
+window.data = {
+  "searchString" : "default_search_string",
+  "reqArray" : []
+}
 
 const HomePage = () => (
   <Page name="home">
@@ -64,12 +69,13 @@ const HomePage = () => (
         placeholder="Search"
         outline
         clearButton
+        onChange={() => window.searchText = event.target.value}
       ></ListInput>
       <ListItem>
         <span
           style={{ display: f7.device.desktop ? "none" : "default" }}
         ></span>
-        <Button fill href="/generator/ID-TODO/generate/">
+        <Button fill href="/generator/ID-TODO/generate/" onClick={() => { window.data.searchString = searchText}}>
           Bilder Generieren
         </Button>{" "}
         {/* Hier fehlt eine Menge Logik: Zunächst muss ein neuer Eintrag im Suchverlauf erstellt werden (mit globaler ID aus dem Backend), dann erst darf auf die Bildgenerierung für diese ID verlinkt werden! */}

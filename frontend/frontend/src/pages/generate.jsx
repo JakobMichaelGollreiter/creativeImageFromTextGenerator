@@ -1,12 +1,11 @@
-import { click, show } from "dom7";
-import { Navbar, Page, Swiper, SwiperSlide, Icon } from "framework7-react";
-import React from "react";
+import { attr, click, show } from 'dom7';
+import { Navbar, Page, Swiper, SwiperSlide, Icon } from 'framework7-react';
+import React from 'react';
 import SwiperCore, { Lazy, Virtual } from 'swiper';
-import "../css/generate.less";
-import { useState, useEffect } from "react";
+import '../css/generate.less';
+import { useState, useEffect } from 'react';
 
 SwiperCore.use([Virtual, Lazy]);
-
 
 export default function App() {
   //used source https://codesandbox.io/s/gynpf?file=/src/App.jsx:336-1972
@@ -32,15 +31,14 @@ export default function App() {
   };
   */
 
+
   const makeSlide = function (index) {
     const [showLike, setShowLike] = useState(false);
     const swiperClick = function (c) {
-      console.log("liked")
+      console.log('liked')
       setShowLike(!showLike);
       like(index)
     }
-
-    //const enterPress = useKeyPress();
 
     return (
       <SwiperSlide 
@@ -49,31 +47,32 @@ export default function App() {
         virtualIndex={index} 
         onDoubleClick={() => setShowLike(!showLike)}
         >
-        <div className="heart-underlaying-image">
+        <button onClick={() => console.log(window.data)}>print searchText</button>
+        <div className='heart-underlaying-image'>
         <img
           src={`https://placekitten.com/${index + 800}`} //must be loading.gif!
-          className="swiper-lazy"
+          className='swiper-lazy'
           style={showLike ? { opacity: 0.7 } : { opacity: 1 }}
-          alt="Bild wird geladen."
+          alt='Bild wird geladen.'
         ></img>
         </div>
         <Icon
-          slot="media"
-          f7="heart_circle"
-          className="heart-icon"
+          slot='media'
+          f7='heart_circle'
+          className='heart-icon'
           style={showLike ? { opacity: 1 } : { opacity: 0 }}
         ></Icon>
-        <button className="likeBtn" onClick={() => setShowLike(!showLike)}>
+        <button className='likeBtn' onClick={() => setShowLike(!showLike)}>
           <Icon
-            slot="media"
-            f7="heart_circle"
+            slot='media'
+            f7='heart_circle'
             size={35}
-            style={showLike ? { color: "red" } : { color: "gray" }}
-            className="likeBtn-icon"
+            style={showLike ? { color: 'red' } : { color: 'gray' }}
+            className='likeBtn-icon'
           ></Icon>
           Like
         </button>
-        <div className="swiper-lazy-preloader swiper-lazy-preloader">
+        <div className='swiper-lazy-preloader swiper-lazy-preloader'>
         </div>
       </SwiperSlide>
     );
@@ -81,7 +80,7 @@ export default function App() {
 
   /*{ window.addEventListener('keydown', event => {
       if (event.code === 'Space') {
-        console.log("space bar pressed")
+        console.log('space bar pressed')
         setShowOverlay(!showOverlay);
       }
     })
@@ -94,7 +93,7 @@ export default function App() {
   /*
   //this does not work. So no more then 1000 slides possible.
   const activeIndexChange = function (s) {
-    console.log("test")
+    console.log('test')
     if (s.activeIndex >= slides.length - 5) {
       swiperRef.virtual.appendSlide(makeSlide(slides.length));
     }
@@ -102,7 +101,7 @@ export default function App() {
 
   return (
     <Page>
-      <Navbar title="WoDone Bildgenerierung" backLink="Zurück"></Navbar>
+      <Navbar title='WoDone Bildgenerierung' backLink='Zurück'></Navbar>
       <Swiper
         onSwiper={setSwiperRef}
         slidesPerView={1}
@@ -115,7 +114,7 @@ export default function App() {
         //onActiveIndexChange={activeIndexChange}
         virtual
         lazy={{ loadPrevNext: false, checkInView: true }}
-        //onLazyImageLoad={() => console.log("LOAD")}
+        //onLazyImageLoad={() => console.log('LOAD')}
         navigation
         mousewheel
         keyboard
@@ -130,9 +129,9 @@ export default function App() {
   );
 }
 
-function useKeyPress() {
+/*function useKeyPress() {
 
-  /*const [keyPressed, setKeyPressed] = useState(false);
+  const [keyPressed, setKeyPressed] = useState(false);
   function downHandler ({ key }) {
     if (key == targetKey) {
       setKeyPressed(true)
@@ -146,16 +145,16 @@ function useKeyPress() {
   }
 
   useEffect(() => {
-    window.addEventListener("keydown", downHandler)
-    window.addEventListener("keyup", upHandler)
+    window.addEventListener('keydown', downHandler)
+    window.addEventListener('keyup', upHandler)
     return () => {
-      window.removeEventListener("keydown", downHandler)
-      window.removeEventListener("keyup", upHandler)
+      window.removeEventListener('keydown', downHandler)
+      window.removeEventListener('keyup', upHandler)
     };
-  }, []);*/
+  }, []);
 
   return
-}
+}*/
 
 
 
@@ -170,21 +169,21 @@ const Generate = () => {
     }
     return (
       <SwiperSlide key={index} virtualIndex={index} onDoubleClick={() => setShowOverlay(!showOverlay)}>
-        <div className="heart-underlaying-image">
+        <div className='heart-underlaying-image'>
         <img
           src={`https://placekitten.com/${index + 800}`}
-          className="swiper-lazy"
+          className='swiper-lazy'
           style={showOverlay ? { opacity: 0.5 } : { opacity: 1 }}
-          alt="Bild wird geladen."
+          alt='Bild wird geladen.'
         ></img>
         </div>
         <Icon
-          slot="media"
-          f7="heart_circle"
-          className="heart-icon"
+          slot='media'
+          f7='heart_circle'
+          className='heart-icon'
           style={showOverlay ? { opacity: 1 } : { opacity: 0 }}
         ></Icon>
-        <div className="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
+        <div className='swiper-lazy-preloader swiper-lazy-preloader-white'></div>
       </SwiperSlide>
     );
   };
@@ -203,12 +202,12 @@ const Generate = () => {
   };
 
   const like = function (index) {
-    console.log("Es wurde geliked:", index)
+    console.log('Es wurde geliked:', index)
   }
 
   return (
     <Page>
-      <Navbar title="WoDone Bildgenerierung" backLink="Zurück"></Navbar>
+      <Navbar title='WoDone Bildgenerierung' backLink='Zurück'></Navbar>
       <Swiper
         modules={[Virtual]}
         spaceBetween={50}
@@ -216,7 +215,7 @@ const Generate = () => {
         virtual
         onActiveIndexChange={activeIndexChange}
         lazy={{ loadPrevNext: false, checkInView: true }}
-        onLazyImageLoad={() => console.log("LOAD")} 
+        onLazyImageLoad={() => console.log('LOAD')} 
         onDoubleClick={like}
       >
         {slides}
