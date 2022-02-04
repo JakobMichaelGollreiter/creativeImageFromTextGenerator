@@ -10,4 +10,3 @@ def requestImage():
         "status": status,
         "imgPath": imgPath
     }), 200
-	
