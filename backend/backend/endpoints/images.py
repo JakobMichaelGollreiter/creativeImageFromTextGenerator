@@ -5,9 +5,10 @@ from vqgan.get_image import get_image
 def requestImage():
 	data = request.json()
 	
-    #here the search information from the frontend is passed to the backend 
+    #here the search information from the frontend is safed
     imPath, status = get_image(data["searchString"],data["reqArray"])
-
+    
+    #here it is passed to the backend 
     return jsonify({
         "status": status,
         "imgPath": imgPath
