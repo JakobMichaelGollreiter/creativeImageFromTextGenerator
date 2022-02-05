@@ -92,7 +92,6 @@ export default function App() {
         virtualIndex={index} 
         onDoubleClick={like}
         >
-        <button onClick={() => console.log(window.data)}>print searchText</button>
         <div className='heart-underlaying-image'>
         <img
           src={slideData[index].src} //must be loading.gif!
