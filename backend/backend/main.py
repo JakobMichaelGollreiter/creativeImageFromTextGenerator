@@ -13,7 +13,7 @@ if not production:
 		response.headers["Access-Control-Allow-Headers"] = "*"
 		return response
 
-api.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+api.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.sqlite'
 api.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(api)
 

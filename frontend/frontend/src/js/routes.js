@@ -20,7 +20,11 @@ var routes = [
     component: AboutPage,
   },
   {
-    path : '/generator/:id/generate/',
+    path : '/generator/:generatorID/',
+    component: Generate,
+  },
+  {
+    path : '/generator/:generatorID/:imageID/',
     component: Generate,
   },
   {

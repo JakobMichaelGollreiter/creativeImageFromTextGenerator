@@ -1,14 +1,13 @@
 import { click, show } from "dom7";
-import { Navbar, Page, Swiper, SwiperSlide, Icon } from "framework7-react";
+import { Navbar, Page, Swiper, SwiperSlide, Icon, f7ready, f7 } from "framework7-react";
 import React from "react";
 import SwiperCore, { Lazy, Virtual } from 'swiper';
 import "../css/generate.less";
 import { useState, useEffect } from "react";
 
-export default function App() {
+export default function Genrate(props) {
 
   //define utilitariean functions
-
   const getDirection = function (current, question){
     // returns -1 for prev, 0 for current, 1 for next
     if (current == 0){
@@ -23,37 +22,52 @@ export default function App() {
     }
     return 0;
   }
+  const serverPath = "http://192.168.0.168:8800"
+  let i = 0;
+  async function getSlideDataByRealIndex (rI){
+    const response = await fetch(serverPath + `/api/generators/${props.generatorID}/${rI}`, {
+      method: "GET",
+    }) //TODO Catch connection failiure
+    if (response.status == 200) {
+      const data = await response.json()
+      let generating = false
+      if (data.status == "generating"){
+        generating = true;
+      }
+     
+        return {
+          "src": `${data.src}`,
+          "like": data.like,
+          "generating": generating,}
+    }else if (response.status == 202){
+      const data = await response.json()
+      console.log(data);
+    }else{
+      f7.dialog.alert("Serverfehler", "Anfrage fehlgeschlagen");
+    }
+   //f7.dialog.alert("Verbindungsfehler", "Es konnte keine Verbindung zum Webserver hergestellt werden.");
 
-  const getSlideDataByRealIndex = function (rI){
-    console.log("serverRequest", rI)
     return {
-      "src": `https://placekitten.com/${rI + 800}`,
+      "src": `https://placekitten.com/${800}`,
       "like": false
     }
   }
 
-  const getSlideDataBySlideIndex = function (slideIndex){
-    return getSlideDataByRealIndex(realIndex + getDirection(currentSlideVisible, slideIndex))
+  async function getSlideDataBySlideIndex (slideIndex){
+    return await getSlideDataByRealIndex(actualIndex + getDirection(currentSlideVisible, slideIndex))
   }
 
   //define state
   const [swiperRef, setSwiperRef] = useState(null); //TODO remove?
-
+  const swiperDummy = {
+    "src": "https://placekitten.com/800",
+    "like": false,
+    "generating": false,
+  };
   const [swiperState, actuallySetSwiperState] = useState({
-    "slides": [{
-      "src": "https://placekitten.com/100",
-      "like": false,
-    },
-    {
-      "src": "https://placekitten.com/101",
-      "like": false
-    },
-    {
-      "src": "https://placekitten.com/102",
-      "like": false
-    }],
+    "slides": [swiperDummy,swiperDummy,swiperDummy],
     "currentSlideVisible": 0,
-    "actalIndex": 0,
+    "actualIndex": 0,
   });
   //make it easy to work with state
   const setSwiperState = function(){
@@ -61,30 +75,41 @@ export default function App() {
       {
         "slides": slideData,
         "currentSlideVisible": currentSlideVisible,
-        "actalIndex": realIndex,
+        "actualIndex": actualIndex,
       }
     )
   }
-  let realIndex = swiperState.actalIndex
+  let actualIndex = swiperState.actualIndex
   let currentSlideVisible = swiperState.currentSlideVisible
   let slideData = swiperState.slides
 
   // create slides
   const makeSlide = function (index) {
     // index must be either 0, 1 or 2 !!!
-    const like = function (c) {
-      if (slideData[index].like){
-        console.log("unliked", realIndex)
+    async function like (c) {
+      console.info("DirectLink:", `http://localhost:3000/app/generator/${props.generatorID}/${actualIndex}/`)
+      const response = await fetch(serverPath + `/api/generators/${props.generatorID}/${actualIndex}`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"like": !slideData[index].like})
+      }).catch(error => {
+        console.error('Error:', error);
+        f7.dialog.alert("Verbindungsfehler", "Es konnte keine Verbindung zum Webserver hergestellt werden.");
+      });
+      if (response.status == 200) {
+        const data = await response.json()
+        console.log(data);
+        const d0 = await getSlideDataBySlideIndex(0)
+        const d1 = await getSlideDataBySlideIndex(1)
+        const d2 = await getSlideDataBySlideIndex(2)
+        slideData = [d0,d1,d2]
+        setSwiperState()
       }else{
-        console.log("liked", realIndex)
+        f7.dialog.alert("Serverfehler", "Anfrage fehlgeschlagen");
       }
-      
-      slideData=[getSlideDataBySlideIndex(0), getSlideDataBySlideIndex(1), getSlideDataBySlideIndex(2)]
-      //slideData[index].like = !slideData[index].like; //demo only TODO remove!
-      setSwiperState()
     }
-
-    console.log("render")
     return (
       <SwiperSlide 
         index={index} 
@@ -106,7 +131,7 @@ export default function App() {
           className="heart-icon"
           style={slideData[index].like ? { opacity: 1 } : { opacity: 0 }}
         ></Icon>
-        <button className="likeBtn" onClick={() => setShowLike(!showLike)}>
+        <button className="likeBtn" onClick={like}>
           <Icon
             slot="media"
             f7="heart_circle"
@@ -133,30 +158,74 @@ export default function App() {
     const direction = getDirection(currentSlideVisible, ev.realIndex)
     currentSlideVisible = ev.realIndex;
     if (direction === -1){
-      realIndex--;
+      actualIndex--;
       const indexToModify = (ev.realIndex + 2) % 3 // like -1 but always positive
-      slideData[indexToModify] = getSlideDataByRealIndex(realIndex - 1)
-      setSwiperState()
+      getSlideDataByRealIndex(actualIndex - 1).then((data) => {
+        if (data != null) {
+          slideData[indexToModify] = data
+          setSwiperState()
+          console.log(data)
+        }
+      })
     }else if (direction === 1){
-      realIndex++;
+      actualIndex++;
       const indexToModify = (ev.realIndex + 1) % 3
-      slideData[indexToModify] = getSlideDataByRealIndex(realIndex + 1)
-      setSwiperState()
+      getSlideDataByRealIndex(actualIndex + 1).then((data) => {
+        if (data != null) {
+          slideData[indexToModify] = data
+          setSwiperState()
+          console.log(data)
+        }
+      })
     }
     // allow sliding back only if not on first page
-    if (realIndex == 0){
+    if (actualIndex == 0){
       ev.allowSlidePrev = false;
       document.getElementsByClassName("swiper-button-prev")[0].classList.add("swiper-button-disabled"); //TODO: Error handeling
     }else{
       ev.allowSlidePrev = true;
       document.getElementsByClassName("swiper-button-prev")[0].classList.remove("swiper-button-disabled"); //TODO: Error handeling
     }
+    //lock sliding foreward if image is still generating
+    if(slideData[ev.realIndex].generating){
+      ev.allowSlideNext = false;
+      document.getElementsByClassName("swiper-button-next")[0].classList.add("swiper-button-disabled");
+    }else{
+      ev.allowSlideNext = true;
+      document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
+    }
   }
-  const initialize = function(ev){
-    slideData = [getSlideDataBySlideIndex(0), getSlideDataBySlideIndex(1), getSlideDataBySlideIndex(2)]
+  async function refreshGenerating(){
+    if(slideData[currentSlideVisible].generating){
+      const c = currentSlideVisible //zwischenspeichern zum Prüfen
+      const d = await getSlideDataBySlideIndex(currentSlideVisible)
+      if(c == currentSlideVisible){
+        slideData[c] = d
+        console.log("hier", d, d.generating)
+        if (d.generating == false){
+          swiperRef.allowSlideNext = true;
+          document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
+        }
+        setSwiperState()
+      }
+    }
+  }
+  async function initialize (ev){
+    if ("imageID" in props){
+      actualIndex = parseInt(props.imageID)
+    }
+    console.log(actualIndex)
+    f7.preloader.show();
+    const d0 = await getSlideDataBySlideIndex(0)
+    const d1 = await getSlideDataBySlideIndex(1)
+    const d2 = await getSlideDataBySlideIndex(2)
+    slideData = [d0,d1,d2]
     setSwiperState()
-    return realIndexChange(ev)
+    f7.preloader.hide();
+    realIndexChange(ev)
   }
+
+  const refreshGeneratingTimeout = setTimeout(refreshGenerating, 100);
 
   return (
     <Page>
@@ -173,7 +242,8 @@ export default function App() {
         mousewheel
         keyboard
         onRealIndexChange={realIndexChange}
-        onInit={initialize}
+        onInit={(ev)=>{f7ready(()=>{initialize(ev)})}}
+        onBeforeDestroy={() => {clearInterval(refreshGeneratingTimeout)}}
       >
         {slides}
       </Swiper>
