@@ -1,11 +1,41 @@
 # -*- coding: utf-8 -*-
 """Create Realistic AI-Generated Images With VQGAN + CLIP"""
 
+from pathlib import Path
+import sys
+import os
+
+########################## PARAMETERS FROM CMDLINE ARE PARSED HERE ##########################
+
+databasepath = "./images"
+imgname = sys.argv[1].replace(' ','') #TODO maybe regular expression
+imgpath = databasepath + "/" + imgname
+for wordindex in sys.argv[2::]:
+    imgpath = imgpath + "/" + wodone_adjectives[int(wordindex)]
+    
+Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
+
+#add "unfinished" flag
+os.system("touch " + imgpath + "/unfinished")
+
+texts = sys.argv[1]
+# prepend adjectives before prompt
+for wordindex in sys.argv[2::]:
+    texts = wodone_adjectives[int(wordindex)] + " " + texts
+
+# Fixed parameters
+model_name = "vqgan_imagenet_f16_16384"
+seed = 42
+
+width = 300 
+height = 300 
+learning_rate = 0.2 
+max_steps = 100 
+
+
 
 import argparse
 import math
-from pathlib import Path
-import sys
 
 sys.path.insert(1, '/content/taming-transformers')
 sys.path.insert(1, '/content/icon-image')
@@ -26,7 +56,6 @@ from torchvision.transforms import functional as TF
 from torch.optim.lr_scheduler import StepLR
 from tqdm.notebook import tqdm
 from shutil import move
-import os
 
 from CLIP import clip
 import kornia.augmentation as K
@@ -214,31 +243,7 @@ def resize_image(image, out_size):
     size = round((area * ratio)**0.5), round((area / ratio)**0.5)
     return image.resize(size, Image.LANCZOS)
 
-
-########################## PARAMETERS FROM CMDLINE ARE PARSED HERE ##########################
-
-#TODO absolute image path
-imgname = sys.argv[1].replace(' ','') #TODO maybe regular expression
-imgpath = "./images/" + imgname
-for wordindex in sys.argv[2::]:
-    imgpath = imgpath + "/" + wodone_adjectives[int(wordindex)]
-    
-Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
-
-# Fixed parameters
-model_name = "vqgan_imagenet_f16_16384"
-seed = 42
-
-texts = sys.argv[1]
-### prepend adjectives before prompt
-for wordindex in sys.argv[2::]:
-    texts = wodone_adjectives[int(wordindex)] + " " + texts
-
-
-width = 300 
-height = 300 
-learning_rate = 0.2 
-max_steps = 100 
+####################### parse parameters ################################
 
 gen_config = {
     "texts": texts,
@@ -251,8 +256,6 @@ gen_config = {
     "training_seed": 42,
     "model": "vqgan_imagenet_f16_16384"
 }
-
-#parse parameters
 
 metadata = PngInfo()
 for k, v in gen_config.items():
@@ -441,9 +444,6 @@ def train(i):
         z.copy_(z.maximum(z_min).minimum(z_max))
 
 ########## "main" ##########################################
-
-#add "unfinished" flag (kinda)
-os.system("touch " + imgpath + "/unfinished")
 
 try:
     for i in tqdm(range(max_steps)):
