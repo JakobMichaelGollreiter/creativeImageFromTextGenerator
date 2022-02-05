@@ -116,7 +116,10 @@ const HomePage = function () {
       <ListItem title="Über die App" link="/about/">
         <Icon slot="media" f7="person_3_fill"></Icon>
       </ListItem>
-      <ListItem title="Einstellungen" link="/settings/">
+      <ListItem title="Einstellungen" link="/settings/" 
+        //external
+        //target="_blank"
+        >
         <Icon slot="media" f7="gear"></Icon>
       </ListItem>
     </List>

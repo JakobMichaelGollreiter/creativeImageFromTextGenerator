@@ -1,5 +1,5 @@
 import { click, show } from "dom7";
-import { Navbar, Page, Swiper, SwiperSlide, Icon, f7ready, f7 } from "framework7-react";
+import { Navbar, Page, Swiper, SwiperSlide, Icon, f7ready, f7, NavLeft, Link, NavRight, NavTitle } from "framework7-react";
 import React from "react";
 import SwiperCore, { Lazy, Virtual } from 'swiper';
 import "../css/generate.less";
@@ -57,7 +57,8 @@ export default function Genrate(props) {
   }
 
   //define state
-  const [swiperRef, setSwiperRef] = useState(null); //TODO remove?
+  const [swiperRef, setSwiperRef] = useState(null);
+  const [backLink, setBackLink] = useState(true);
   const swiperDummy = {
     "src": "https://placekitten.com/800",
     "like": false,
@@ -221,6 +222,7 @@ export default function Genrate(props) {
   async function initialize (ev){
     if ("imageID" in props){
       actualIndex = parseInt(props.imageID)
+      setBackLink(false)
     }
     console.log(actualIndex)
     f7.preloader.show();
@@ -237,7 +239,19 @@ export default function Genrate(props) {
 
   return (
     <Page>
-      <Navbar title="WoDone Bildgenerierung" backLink="Zurück"></Navbar>
+      <Navbar backLink={backLink ? "Zurück" : undefined}>
+      {!backLink && <NavLeft>
+        <Link
+        iconIos="f7:house"
+        iconAurora="f7:house"
+        iconMd="material:house"
+        href={`${window.location.protocol}//${window.location.host}/app/`} 
+        external></Link>
+      </NavLeft>}
+      <NavTitle>
+      WoDone Bildgenerierung
+      </NavTitle>
+      </Navbar>
       <Swiper
         onSwiper={setSwiperRef}
         slidesPerView={1}

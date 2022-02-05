@@ -2,11 +2,7 @@
 import HomePage from '../pages/home.jsx';
 import AboutPage from '../pages/about.jsx';
 
-import FormPage from '../pages/form.jsx';
-
-
-import DynamicRoutePage from '../pages/dynamic-route.jsx';
-import RequestAndLoad from '../pages/request-and-load.jsx';
+import HistoryPage from '../pages/history.jsx';
 import NotFoundPage from '../pages/404.jsx';
 import Generate from '../pages/generate.jsx';
 
@@ -18,6 +14,10 @@ var routes = [
   {
     path: '/about/',
     component: AboutPage,
+  },
+  {
+    path: '/history/',
+    component: HistoryPage,
   },
   {
     path : '/generator/:generatorID/',

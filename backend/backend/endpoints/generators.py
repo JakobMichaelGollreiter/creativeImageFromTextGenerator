@@ -17,7 +17,7 @@ def generators_function():
 	elif request.method == 'GET':
 		# return all existing generators
 		gens = []
-		gs = generators.query.all()
+		gs = generators.query.order_by(generators.id.desc()).all()
 		for g in gs:
 			gens.append({
 				"id": g.id,
