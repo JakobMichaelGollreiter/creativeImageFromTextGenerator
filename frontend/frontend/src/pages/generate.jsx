@@ -86,7 +86,16 @@ export default function Genrate(props) {
   const makeSlide = function (index) {
     // index must be either 0, 1 or 2 !!!
     async function like (c) {
-      console.info("DirectLink:", `http://localhost:3000/app/generator/${props.generatorID}/${actualIndex}/`)
+      if (!slideData[index].like){
+        f7.notification.create({
+          icon: '<img src="/icons/favicon.png">',
+          title: 'Direkter Link zu diesem Bild',
+          //subtitle: '',
+          text: `${window.location.protocol}//${window.location.host}/app/generator/${props.generatorID}/${actualIndex}/`,
+          closeButton: true,
+          closeTimeout: 3000,
+        }).open();
+      }
       const response = await fetch(`/api/generators/${props.generatorID}/${actualIndex}`, {
         method: "POST",
         headers: {

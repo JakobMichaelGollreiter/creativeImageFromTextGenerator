@@ -43,8 +43,9 @@ def requestImage(generatorID, imageID):
             db.session.commit()
         elif int(imageID) == highestID:
             img = images.query.filter(images.generator_id == generatorID, images.identifier == imageID).one()
-            if not [*getBaseSeed(generatorID), img.seed[len(img.seed)-1]] == img.seed:
-                img.seed = getNextSeed(generatorID)
+            # (Only) the last image is recreated if Likes have changed
+            if not img.liked and not [*getBaseSeed(generatorID), img.seed[len(img.seed)-1]] == img.seed:
+                img.seed = [*getBaseSeed(generatorID), img.seed[len(img.seed)-1]] # This guaranties that linking and unlinking the previous image does not generate to much server load
                 db.session.commit()
         else:
              img = images.query.filter(images.generator_id == generatorID, images.identifier == imageID).one()
