@@ -1,1 +1,7 @@
 __pycache__
+vqgan/CLIP
+vqgan/icon-image
+vqgan/taming
+vqgan/taming-transformers
+vqgan/vqgan_imagenet_f16_16384.ckpt
+vqgan/vqgan_imagenet_f16_16384.yaml
