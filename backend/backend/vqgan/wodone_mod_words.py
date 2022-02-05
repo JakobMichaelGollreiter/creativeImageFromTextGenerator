@@ -14,7 +14,7 @@ wodone_adjectives = [
     "mediterranian", "african", "south american",
     "nordic", "northern",                                       #good for landscapes, otherwise not much
 #emotions
-    "horror", "bloody", "terrifying", "scary",                  #nice twist
+    "horror", "bloody", "terrifying", "scary",                  #nice twist, "bloody" works very well
     "gloomy", "mysterious", "magical", "fantasy",               #medium/good results
     #"calming",                                                 #little impact
     "warming", "cold",
