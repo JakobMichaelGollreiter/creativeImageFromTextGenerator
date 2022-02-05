@@ -4,6 +4,7 @@
 from pathlib import Path
 import sys
 import os
+from wodone_mod_words import wodone_adjectives
 
 ########################## PARAMETERS FROM CMDLINE ARE PARSED HERE ##########################
 
@@ -14,6 +15,8 @@ for wordindex in sys.argv[2::]:
     imgpath = imgpath + "/" + wodone_adjectives[int(wordindex)]
     
 Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
+#copy fake 000.png to steps ordner for a quicker preview image
+os.system("cp 000_sample.png " + imgpath + "/steps/000.png")
 
 #add "unfinished" flag
 os.system("touch " + imgpath + "/unfinished")
@@ -64,7 +67,6 @@ import imageio
 from PIL import ImageFile, Image
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-from wodone_mod_words import wodone_adjectives
 
 def sinc(x):
     return torch.where(x != 0, torch.sin(math.pi * x) / (math.pi * x), x.new_ones([]))
