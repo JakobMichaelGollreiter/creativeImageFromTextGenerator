@@ -24,14 +24,13 @@ import {
 } from "framework7-react";
 import { append, data } from "dom7";
 import ExplanationBlock from "../components/explanationBlock";
-const serverPath = "http://192.168.0.168:8800"
 const HomePage = function () {
   const [searchstring, setSearchstring] = useState("")
 
   const requestGenerator = function(){
     console.log(searchstring)
     f7.dialog.preloader("Laden");
-    fetch(serverPath + "/api/generators", {
+    fetch("/api/generators", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'

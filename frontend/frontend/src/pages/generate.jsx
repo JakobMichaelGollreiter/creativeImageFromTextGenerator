@@ -22,10 +22,9 @@ export default function Genrate(props) {
     }
     return 0;
   }
-  const serverPath = "http://192.168.0.168:8800"
   let i = 0;
   async function getSlideDataByRealIndex (rI){
-    const response = await fetch(serverPath + `/api/generators/${props.generatorID}/${rI}`, {
+    const response = await fetch(`/api/generators/${props.generatorID}/${rI}`, {
       method: "GET",
     }) //TODO Catch connection failiure
     if (response.status == 200) {
@@ -88,7 +87,7 @@ export default function Genrate(props) {
     // index must be either 0, 1 or 2 !!!
     async function like (c) {
       console.info("DirectLink:", `http://localhost:3000/app/generator/${props.generatorID}/${actualIndex}/`)
-      const response = await fetch(serverPath + `/api/generators/${props.generatorID}/${actualIndex}`, {
+      const response = await fetch(`/api/generators/${props.generatorID}/${actualIndex}`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
