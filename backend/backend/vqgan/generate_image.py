@@ -456,3 +456,4 @@ except KeyboardInterrupt:
     pass
 
 os.system("rm " + imgpath + "/unfinished")
+os.system("rm -r " + imgpath + "/steps")
