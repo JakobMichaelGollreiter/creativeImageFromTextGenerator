@@ -1,4 +1,5 @@
 import React from "react";
+import { useState} from "react";
 import {
   Page,
   Navbar,
@@ -21,10 +22,38 @@ import {
   f7,
   Icon,
 } from "framework7-react";
-import { append } from "dom7";
+import { append, data } from "dom7";
 import ExplanationBlock from "../components/explanationBlock";
+const HomePage = function () {
+  const [searchstring, setSearchstring] = useState("")
 
-const HomePage = () => (
+  const requestGenerator = function(){
+    console.log(searchstring)
+    f7.dialog.preloader("Laden");
+    fetch("/api/generators", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({"search": searchstring})
+    }).then((response) => {
+      if (response.status == 201) {
+        response.json().then((data) => {
+          f7.dialog.close();
+          f7.views.main.router.navigate(`/generator/${data.id}/`)
+        })
+      }else{
+        f7.dialog.close();
+        f7.dialog.alert("Serverfehler", "Anfrage fehlgeschlagen");
+      }
+    }).catch(error => {
+      console.error('Error:', error);
+      f7.dialog.close();
+      f7.dialog.alert("Verbindungsfehler", "Es konnte keine Verbindung zum Webserver hergestellt werden.");
+    });
+  }
+
+  return(
   <Page name="home">
     {/* Top Navbar */}
     <Navbar>
@@ -64,15 +93,17 @@ const HomePage = () => (
         placeholder="Search"
         outline
         clearButton
+        value={searchstring}
+        onChange={(e) => setSearchstring(e.target.value)}
       ></ListInput>
       <ListItem>
         <span
           style={{ display: f7.device.desktop ? "none" : "default" }}
         ></span>
-        <Button fill href="/generator/ID-TODO/generate/">
+        <Button fill onClick={requestGenerator}>
           Bilder Generieren
-        </Button>{" "}
-        {/* Hier fehlt eine Menge Logik: Zunächst muss ein neuer Eintrag im Suchverlauf erstellt werden (mit globaler ID aus dem Backend), dann erst darf auf die Bildgenerierung für diese ID verlinkt werden! */}
+        </Button>
+        {/* href="/generator/ID-TODO/generate/"  Hier fehlt eine Menge Logik: Zunächst muss ein neuer Eintrag im Suchverlauf erstellt werden (mit globaler ID aus dem Backend), dann erst darf auf die Bildgenerierung für diese ID verlinkt werden! */}
       </ListItem>
     </List>
 
@@ -85,7 +116,10 @@ const HomePage = () => (
       <ListItem title="Über die App" link="/about/">
         <Icon slot="media" f7="person_3_fill"></Icon>
       </ListItem>
-      <ListItem title="Einstellungen" link="/settings/">
+      <ListItem title="Einstellungen" link="/settings/" 
+        //external
+        //target="_blank"
+        >
         <Icon slot="media" f7="gear"></Icon>
       </ListItem>
     </List>
@@ -137,5 +171,5 @@ const HomePage = () => (
       />
     </List> */}
   </Page>
-);
+)};
 export default HomePage;
