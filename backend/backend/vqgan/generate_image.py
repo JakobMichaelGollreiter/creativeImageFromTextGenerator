@@ -6,6 +6,12 @@ import sys
 import os
 from wodone_mod_words import wodone_adjectives
 
+#very brute force way of ensuring no two images are generated at the same time
+if Path("./rendering").exists():
+    print("\nERROR: Already Generating an Image. Exiting.\n")
+    quit()
+
+
 ########################## PARAMETERS FROM CMDLINE ARE PARSED HERE ##########################
 
 databasepath = "./images"
@@ -15,11 +21,11 @@ for wordindex in sys.argv[2::]:
     imgpath = imgpath + "/" + wodone_adjectives[int(wordindex)]
     
 Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
-#copy fake 000.png to steps ordner for a quicker preview image
-os.system("cp 000_sample.png " + imgpath + "/steps/000.png")
 
-#add "unfinished" flag
+#add "unfinished" flag to show image is undergoing rendering process
 os.system("touch " + imgpath + "/unfinished")
+#add global "rendering" flag to block incoming requests overloading GPU
+os.system("touch rendering")
 
 texts = sys.argv[1]
 # prepend adjectives before prompt
@@ -455,5 +461,8 @@ try:
 except KeyboardInterrupt:
     pass
 
+#remove flags
 os.system("rm " + imgpath + "/unfinished")
+os.system("rm rendering")
+#remove generator steps (save disk space)
 os.system("rm -r " + imgpath + "/steps")
