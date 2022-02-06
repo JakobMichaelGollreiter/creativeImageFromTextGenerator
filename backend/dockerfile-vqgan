@@ -26,7 +26,7 @@ RUN cd /usr/local/bin/api/vqgan && \
 
 COPY backend /usr/local/bin/api
 
-COPY backend/vqgan/000_sample.png /var/www/html/images/
+COPY backend/vqgan/giphy.gif /var/www/html/images/
 
 COPY entrypoint-vqgan.sh /workspace/
 RUN chmod +x /workspace/entrypoint-vqgan.sh

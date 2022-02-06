@@ -12,7 +12,7 @@ class images(db.Model):
 	generated = db.Column(db.Boolean)
 	generator_id = db.Column(db.Integer, db.ForeignKey('generators.id'))
 	generator = db.relationship("generators", back_populates="images")
-	def __init__(self, generator_id, identifier, seed, liked=False, path="/api/images/000_sample.png", generated=False):
+	def __init__(self, generator_id, identifier, seed, liked=False, path="/api/images/giphy.gif", generated=False):
 		self.generator_id = generator_id
 		self.identifier = identifier
 		self.seed = seed
