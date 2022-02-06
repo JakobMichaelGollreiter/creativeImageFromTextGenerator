@@ -8,27 +8,22 @@ from vqgan.wodone_mod_words import wodone_adjectives
 from models.generators import generators
 from models.images import images
 
-def generate_image(prompt, modifiers):
+def generate_image(image_id):
 	########################## PARAMETERS FROM CMDLINE ARE PARSED HERE ##########################
 
 	globalimagedirpath = "/var/www/html/images"
-	#globalimagedirpath = "./vqgan/images"
-	imgname = prompt.replace(' ','') #TODO maybe regular expression
-	imgpath = globalimagedirpath + "/" + imgname
-	for wordindex in modifiers:
-		imgpath = imgpath + "/" + wodone_adjectives[int(wordindex)]
-		
-	Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
 
-	#add "unfinished" flag to show image is undergoing rendering process
-	os.system("touch " + imgpath + "/unfinished")
-	#add global "rendering" flag to block incoming requests overloading GPU
-	os.system("touch rendering")
+	texts = generators.query.get(images.generator_id) #digga keine Ahnung
+	imgpath = globalimagedirpath + "/" + str(texts)
 
-	texts = prompt
-	# prepend adjectives before prompt
+	modifiers = images.seed # wie zur hölle
 	for wordindex in modifiers:
 		texts = wodone_adjectives[int(wordindex)] + " " + texts
+		imgpath = imgpath + "/" + str(wordindex)
+
+	#create directory and add unfinished flag
+	Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
+	os.system("touch " + imgpath + "/unfinished")
 
 	# Fixed parameters
 	model_name = "vqgan_imagenet_f16_16384"
@@ -38,8 +33,6 @@ def generate_image(prompt, modifiers):
 	height = 300 
 	learning_rate = 0.2 
 	max_steps = 100 
-
-
 
 	import argparse
 	import math
