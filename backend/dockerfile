@@ -18,7 +18,7 @@ RUN pip3 install -r /usr/local/bin/api/requirements.txt
 
 COPY default /etc/nginx/sites-enabled/
 
-COPY entrypoint.sh /
-RUN chmod +x /entrypoint.sh
+COPY entrypoint.sh /workspace/
+RUN chmod +x /workspace/entrypoint.sh
 
 CMD ["./entrypoint.sh"]
