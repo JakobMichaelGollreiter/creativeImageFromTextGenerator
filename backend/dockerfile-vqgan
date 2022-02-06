@@ -7,6 +7,7 @@ ENV VERSION "1"
 USER root
 
 RUN apt-get update && apt-get install -y --no-install-recommends mariadb-client python3 python3-pip
+RUN pip3 uninstall -y torch torchtext
 
 COPY python-requirements-flask.txt /tmp
 COPY python-requirements-vqgan.txt /tmp
