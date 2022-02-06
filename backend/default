@@ -9,7 +9,7 @@ server {
 	server_name _;
 
 	location /api/images {
-		alias /var/www/html/images
+		alias /var/www/html/images;
         #expires 1d;
         #add_header Cache-Control "public, no-transform";
         try_files $uri =404;
