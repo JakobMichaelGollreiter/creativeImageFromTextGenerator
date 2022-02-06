@@ -142,7 +142,7 @@ export default function Genrate(props) {
           className="heart-icon"
           style={slideData[index].like ? { opacity: 1 } : { opacity: 0 }}
         ></Icon>
-        <button className="likeBtn" onClick={like}>
+        {/*<button className="likeBtn" onClick={like}>
           <Icon
             slot="media"
             f7="heart_circle"
@@ -152,7 +152,7 @@ export default function Genrate(props) {
           ></Icon>
           Like
         </button>
-        {/*<div className="swiper-lazy-preloader swiper-lazy-preloader"></div>*/}
+        <div className="swiper-lazy-preloader swiper-lazy-preloader"></div>*/}
       </SwiperSlide>
     );
   };  
