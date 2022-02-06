@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Page, Navbar, Block, List, ListItem, BlockTitle, PageContent } from "framework7-react";
+import { Page, Navbar, Block, List, ListItem, BlockTitle, PageContent, f7 } from "framework7-react";
 
 const HistoryPage = () => {
     const [hist, setHist] = useState([]);
