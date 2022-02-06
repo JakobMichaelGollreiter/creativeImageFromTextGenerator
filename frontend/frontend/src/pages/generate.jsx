@@ -262,7 +262,7 @@ export default function Genrate(props) {
         loop
         //virtual
         //lazy={{ loadPrevNext: false, checkInView: true }}
-        navigation
+        navigation={f7.device.desktop}
         mousewheel
         keyboard
         onRealIndexChange={realIndexChange}
