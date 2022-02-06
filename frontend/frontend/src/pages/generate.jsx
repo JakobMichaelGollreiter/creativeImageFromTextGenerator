@@ -25,6 +25,7 @@ export default function Genrate(props) {
     async function getSlideDataByRealIndex(rI) {
         const response = await fetch(`/api/generators/${props.generatorID}/${rI}`, {
             method: "GET",
+            timeout: 250,
         }); //TODO Catch connection failiure
         if (response.status == 200) {
             const data = await response.json();
