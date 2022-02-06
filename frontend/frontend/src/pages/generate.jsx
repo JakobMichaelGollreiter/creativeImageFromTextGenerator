@@ -239,7 +239,7 @@ export default function Genrate(props) {
                             iconIos="f7:house"
                             iconAurora="f7:house"
                             iconMd="material:house"
-                            href={`${window.location.protocol}//${window.location.host}/app/`}
+                            href={`${window.location.protocol}//${window.location.host}/`}
                             external
                         ></Link>
                     </NavLeft>
