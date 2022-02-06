@@ -1,3 +1,7 @@
+Flask
+flask_sqlalchemy
+mysql-connector-python
+
 IPython
 omegaconf
 taming-transformers
