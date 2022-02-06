@@ -46,12 +46,28 @@ def requestImage(generatorID, imageID):
             # (Only) the last image is recreated if Likes have changed
             if not img.liked and not [*getBaseSeed(generatorID), img.seed[len(img.seed)-1]] == img.seed:
                 img.seed = [*getBaseSeed(generatorID), img.seed[len(img.seed)-1]] # This guaranties that linking and unlinking the previous image does not generate to much server load
-                db.session.commit()
+                db.session.commit() #TODO maybe use flush and ony one commit at the end
         else:
              img = images.query.filter(images.generator_id == generatorID, images.identifier == imageID).one()
-        #imgPath, status = get_image(gen.search,img.seed)
-        imgPath = "https://placekitten.com/"+str(int(imageID)+800)
-        status = "ok"
+        
+        imgPath = img.path
+
+        if img.generated:
+            status = "ok"
+        else:
+            # first check if an equivalent image exists
+            eq = images.query.join(generators).filter(generators.search == gen.search, images.seed == img.seed, images.id != img.id).order_by(images.id.asc()).first()
+            if eq:
+                img.path = eq.path
+                imgPath = eq.path
+                img.generated = eq.generated
+                db.session.commit()
+                if eq.generated:
+                    status = "ok"
+                else:
+                    status = "generating"
+            else:
+                status = "generating"
         debg = {"search": gen.search, "seed": img.seed} #TODO: remove
         return jsonify({"status": status,"src": imgPath, "like": img.liked, "debug": debg}), 200
     elif request.method == "POST":
