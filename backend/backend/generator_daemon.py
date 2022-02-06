@@ -30,5 +30,6 @@ while True:
 			print("seconds without an image to render: ", workplaceinjuries/10)
 			sys.stdout.flush()
 
-	db.session.expire(img)
+	#have the database refresh next time
+	db.session.commit()
 	del img
