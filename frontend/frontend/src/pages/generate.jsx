@@ -59,13 +59,13 @@ export default function Genrate(props) {
     //define state
     const [swiperRef, setSwiperRef] = useState(null);
     const [backLink, setBackLink] = useState(true);
-    const swiperDummy = {
+    const slideDummy = {
         src: "", //"https://placekitten.com/800",
         like: false,
         generating: false,
     };
     const [swiperState, actuallySetSwiperState] = useState({
-        slides: [swiperDummy, swiperDummy, swiperDummy],
+        slides: [slideDummy, slideDummy, slideDummy],
         currentSlideVisible: 0,
         actualIndex: 0,
     });
@@ -162,6 +162,8 @@ export default function Genrate(props) {
         if (direction === -1) {
             actualIndex--;
             const indexToModify = (ev.realIndex + 2) % 3; // like -1 but always positive
+            slideData[indexToModify] = slideDummy;
+            setSwiperState();
             getSlideDataByRealIndex(actualIndex - 1).then((data) => {
                 if (data != null) {
                     slideData[indexToModify] = data;
@@ -172,6 +174,8 @@ export default function Genrate(props) {
         } else if (direction === 1) {
             actualIndex++;
             const indexToModify = (ev.realIndex + 1) % 3;
+            slideData[indexToModify] = slideDummy;
+            setSwiperState();
             getSlideDataByRealIndex(actualIndex + 1).then((data) => {
                 if (data != null) {
                     slideData[indexToModify] = data;
