@@ -4,16 +4,17 @@
 from pathlib import Path
 import sys
 import os
-from wodone_mod_words import wodone_adjectives
-#from models.generators import generators
-#from models.images import images
+from vqgan.wodone_mod_words import wodone_adjectives
+from models.generators import generators
+from models.images import images
 
 def generate_image(prompt, modifiers):
 	########################## PARAMETERS FROM CMDLINE ARE PARSED HERE ##########################
 
-	databasepath = "./images"
+	globalimagedirpath = "/var/www/html/images"
+	#globalimagedirpath = "./vqgan/images"
 	imgname = prompt.replace(' ','') #TODO maybe regular expression
-	imgpath = databasepath + "/" + imgname
+	imgpath = globalimagedirpath + "/" + imgname
 	for wordindex in modifiers:
 		imgpath = imgpath + "/" + wodone_adjectives[int(wordindex)]
 		
@@ -43,10 +44,9 @@ def generate_image(prompt, modifiers):
 	import argparse
 	import math
 
-	sys.path.insert(1, '/content/taming-transformers')
-	sys.path.insert(1, '/content/icon-image')
+	sys.path.insert(1, '/usr/local/bin/api/vqgan/taming-transformers')
+	#sys.path.insert(1, 'vqgan/taming-transformers')
 
-	#from icon_image import gen_icon
 	from IPython import display
 	from base64 import b64encode
 	from omegaconf import OmegaConf
@@ -63,10 +63,9 @@ def generate_image(prompt, modifiers):
 	from tqdm.notebook import tqdm
 	from shutil import move
 
-	from CLIP import clip
+	from vqgan.CLIP import clip
 	import kornia.augmentation as K
 	import numpy as np
-	import imageio
 	from PIL import ImageFile, Image
 	ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -295,8 +294,8 @@ def generate_image(prompt, modifiers):
 		init_image=init_image,
 		init_weight=0.,
 		clip_model='ViT-B/32',
-		vqgan_config=f'{model_name}.yaml',
-		vqgan_checkpoint=f'{model_name}.ckpt',
+		vqgan_config=f'vqgan/{model_name}.yaml',
+		vqgan_checkpoint=f'vqgan/{model_name}.ckpt',
 		step_size=learning_rate,
 		cutn=32,
 		cut_pow=1.,
