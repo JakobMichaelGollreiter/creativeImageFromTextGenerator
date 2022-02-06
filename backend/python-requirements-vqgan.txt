@@ -1,0 +1,12 @@
+IPython
+omegaconf
+taming-transformers
+ftfy
+regex
+kornia
+imageio-ffmpeg
+einops
+tqdm
+pytorch-lightning
+imageio
+jupyter

@@ -1,0 +1,25 @@
+FROM debian:bullseye-slim
+
+ENV DEBIAN_FRONTEND noninteractive
+
+ENV VERSION "1"
+
+USER root
+
+RUN apt-get update && apt-get install -y --no-install-recommends nginx mariadb-client python3 python3-pip uwsgi uwsgi-plugin-python3
+
+COPY python-requirements-flask.txt /tmp
+
+RUN pip3 install -r /tmp/python-requirements-flask.txt
+
+#RUN rm -r /etc/nginx/sites-enabled/*
+
+RUN mkdir /usr/local/bin/api
+COPY backend /usr/local/bin/api
+
+COPY default /etc/nginx/sites-enabled/
+
+COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+
+CMD ["./entrypoint.sh"]
