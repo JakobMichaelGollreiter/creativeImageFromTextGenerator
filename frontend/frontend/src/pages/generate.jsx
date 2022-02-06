@@ -49,7 +49,7 @@ export default function Genrate(props) {
    //f7.dialog.alert("Verbindungsfehler", "Es konnte keine Verbindung zum Webserver hergestellt werden.");
 
     return {
-      "src": `https://placekitten.com/${800}`,
+      "src": "",//`https://placekitten.com/${800}`,
       "like": false
     }
   }
