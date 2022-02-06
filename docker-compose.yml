@@ -22,6 +22,8 @@ services:
        - 127.0.0.1:8081:80
     env_file:
       - ./environment.env
+    volumes:
+      - wodone_images:/var/www/html/images
     networks:
       - wodone
       - wodone_database_net
@@ -46,6 +48,7 @@ services:
 
 volumes:
   database:
+  wodone_images:
 
 networks:
   wodone:

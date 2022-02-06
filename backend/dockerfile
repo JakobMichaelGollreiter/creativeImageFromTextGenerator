@@ -17,6 +17,7 @@ RUN pip3 install -r /usr/local/bin/api/requirements.txt
 #RUN rm -r /etc/nginx/sites-enabled/*
 
 COPY default /etc/nginx/sites-enabled/
+COPY backend/vqgan/000_sample.png /var/www/html/images
 
 COPY entrypoint.sh /workspace/
 RUN chmod +x /workspace/entrypoint.sh
