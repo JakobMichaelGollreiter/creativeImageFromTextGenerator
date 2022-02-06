@@ -8,10 +8,13 @@ function shutdown {
 trap shutdown SIGTERM
 
 while ! mysqladmin ping -h"$MYSQL_HOST" --silent; do
+	echo "connecting to sql..."
     sleep 1
 done
 
+echo "connected! waiting another 10 pointless seconds..."
 sleep 10
+echo "done! now starting generator daemon"
 
 cd /usr/local/bin/api
 python3 generator_daemon.py

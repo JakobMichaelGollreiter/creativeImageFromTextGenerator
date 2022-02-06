@@ -463,8 +463,11 @@ def generate_image(image_id):
 		########## "main" ##########################################
 
 		try:
-			for i in tqdm(range(max_steps)):
+			for i in range(max_steps):
 				train(i)
+				if not i%20:
+					print("prompt: " + texts + f", iteration {i:03d}")
+					sys.stdout.flush()
 			# save final image to progress.png
 			#checkin(max_steps, ascend_txt()) 
 		except KeyboardInterrupt:
@@ -481,5 +484,6 @@ def generate_image(image_id):
 		os.system("rm -r " + imgpath + "/steps")
 
 	except:
+		db.session.rollback()
 		print("Error while generating")
 		os.system("rm -rf " + imgpath)

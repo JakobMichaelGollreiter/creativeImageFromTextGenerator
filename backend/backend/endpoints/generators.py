@@ -1,3 +1,4 @@
+from email.mime import image
 from flask import Flask, json, jsonify, request
 from main import api, db
 from models.generators import generators
@@ -26,6 +27,24 @@ def generators_function():
 		return jsonify({
 			"generators": gens
 		}), 200 #should be 200
+
+@api.route('/api/all_images', methods=['GET'])
+def get_all_images():
+	imgs = images.query.all()
+	res = []
+	for img in imgs:
+		res.append({
+			"id": img.id,
+			"identifier": img.identifier,
+			"seed": img.seed,
+			"liked": img.liked,
+			"path": img.path,
+			"generated": img.generated,
+			"generator_id": img.generator_id,
+			"generator.search": img.generator.search
+		})
+	return jsonify(res), 200
+
 
 '''
 @api.route("/api/generators/<generatorID>", methods=["DELETE"])

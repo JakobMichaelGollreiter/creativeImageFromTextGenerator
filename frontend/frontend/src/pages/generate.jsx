@@ -93,7 +93,7 @@ export default function Genrate(props) {
                         //subtitle: '',
                         text: `${window.location.protocol}//${window.location.host}/#!/generator/${props.generatorID}/${actualIndex}/`,
                         closeButton: true,
-                        closeTimeout: 3000,
+                        closeTimeout: 4000,
                     })
                     .open();
             }
@@ -232,7 +232,7 @@ export default function Genrate(props) {
         realIndexChange(ev);
     }
 
-    const refreshGeneratingTimeout = setTimeout(refreshGenerating, 100);
+    const refreshGeneratingTimeout = setTimeout(refreshGenerating, 600);
 
     return (
         <Page>
