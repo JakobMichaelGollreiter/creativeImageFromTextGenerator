@@ -13,6 +13,9 @@ while True:
 
 	if img:
 		print("generating new image")
-		generate_image(img.id)
+		try:
+			generate_image(img.id)
+		except:
+			pass
 	else:
 		sleep(0.1)
