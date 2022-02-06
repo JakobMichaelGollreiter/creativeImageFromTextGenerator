@@ -25,7 +25,7 @@ def generate_image(image_id):
 	for wordindex in modifiers:
 		texts = wodone_adjectives[int(wordindex)] + " " + texts
 		imgpathrel = imgpathrel + "/" + str(wordindex)
-
+	print("currently generating: ", texts)
 	imgpath = globalimagedirpath + "/" + imgpathrel
 	imgpathdb = "/api/images/" + imgpathrel
 

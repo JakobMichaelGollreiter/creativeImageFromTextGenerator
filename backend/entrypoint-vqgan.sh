@@ -13,7 +13,6 @@ done
 
 sleep 10
 
-cd /usr/local/bin/vqgan
-#python3 initialRunner.py
-#TODO
+cd /usr/local/bin/api
+python3 generator_daemon.py
 

@@ -19,7 +19,7 @@ RUN mkdir /usr/local/bin/api
 RUN mkdir /usr/local/bin/api/vqgan
 RUN cd /usr/local/bin/api/vqgan && \ 
 	git clone https://github.com/openai/CLIP && \
-	git clone https://github.com/CompVis/taming-transformers.git taming_transformers && \
+	#git clone https://github.com/CompVis/taming-transformers.git taming_transformers && \
 	curl -L -o vqgan_imagenet_f16_16384.ckpt -C - 'https://heibox.uni-heidelberg.de/f/867b05fc8c4841768640/?dl=1' && \
 	curl -L -o vqgan_imagenet_f16_16384.yaml -C - 'https://heibox.uni-heidelberg.de/f/274fb24ed38341bfa753/?dl=1'
 
