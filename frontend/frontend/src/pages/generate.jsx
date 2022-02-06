@@ -1,3 +1,4 @@
+import { data } from "dom7";
 import { f7, f7ready, Icon, Link, Navbar, NavLeft, NavTitle, Page, Swiper, SwiperSlide } from "framework7-react";
 import React, { useState } from "react";
 import SwiperCore, { Mousewheel, Navigation } from "swiper";
@@ -40,12 +41,11 @@ export default function Genrate(props) {
             };
         } else if (response.status == 202) {
             const data = await response.json();
-            console.log(data);
         } else {
             f7.dialog.alert("Serverfehler", "Anfrage fehlgeschlagen");
         }
         //f7.dialog.alert("Verbindungsfehler", "Es konnte keine Verbindung zum Webserver hergestellt werden.");
-
+        console.error(rI, response.status, data);
         return {
             src: `https://placekitten.com/${800}`,
             like: false,
@@ -85,6 +85,7 @@ export default function Genrate(props) {
     const makeSlide = function (index) {
         // index must be either 0, 1 or 2 !!!
         async function like(c) {
+            l = slideData[index].like;
             if (!slideData[index].like) {
                 f7.notification
                     .create({
@@ -109,7 +110,6 @@ export default function Genrate(props) {
             });
             if (response.status == 200) {
                 const data = await response.json();
-                console.log(data);
                 const d0 = await getSlideDataBySlideIndex(0);
                 const d1 = await getSlideDataBySlideIndex(1);
                 const d2 = await getSlideDataBySlideIndex(2);
@@ -168,7 +168,6 @@ export default function Genrate(props) {
                 if (data != null) {
                     slideData[indexToModify] = data;
                     setSwiperState();
-                    console.log(data);
                 }
             });
         } else if (direction === 1) {
@@ -180,12 +179,12 @@ export default function Genrate(props) {
                 if (data != null) {
                     slideData[indexToModify] = data;
                     setSwiperState();
-                    console.log(data);
                 }
             });
         }
-        // allow sliding back only if not on first page
+        // allow sliding back only if not on first page and if not current image is still generating
         if (actualIndex == 0) {
+            // || slideData[ev.realIndex].generating) {
             ev.allowSlidePrev = false;
             document.getElementsByClassName("swiper-button-prev")[0].classList.add("swiper-button-disabled"); //TODO: Error handeling
         } else {
@@ -196,6 +195,7 @@ export default function Genrate(props) {
         if (slideData[ev.realIndex].generating) {
             ev.allowSlideNext = false;
             document.getElementsByClassName("swiper-button-next")[0].classList.add("swiper-button-disabled");
+            //refreshGenerating()
         } else {
             ev.allowSlideNext = true;
             document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
@@ -204,10 +204,10 @@ export default function Genrate(props) {
     async function refreshGenerating() {
         if (slideData[currentSlideVisible].generating) {
             const c = currentSlideVisible; //zwischenspeichern zum Prüfen
+            const a = actualIndex;
             const d = await getSlideDataBySlideIndex(currentSlideVisible);
-            if (c == currentSlideVisible) {
+            if (c == currentSlideVisible && a == actualIndex) {
                 slideData[c] = d;
-                console.log("hier", d, d.generating);
                 if (d.generating == false) {
                     swiperRef.allowSlideNext = true;
                     document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
@@ -221,7 +221,6 @@ export default function Genrate(props) {
             actualIndex = parseInt(props.imageID);
             setBackLink(false);
         }
-        console.log(actualIndex);
         f7.preloader.show();
         const d0 = await getSlideDataBySlideIndex(0);
         const d1 = await getSlideDataBySlideIndex(1);
