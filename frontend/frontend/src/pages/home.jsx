@@ -45,13 +45,21 @@ const HomePage = function () {
             <BlockTitle>Suchbegriff eingeben</BlockTitle>
             <List noHairlinesMd>
                 <ListInput
-                    type="text"
-                    placeholder="Search"
                     outline
                     clearButton
                     value={searchstring}
                     onChange={(e) => setSearchstring(e.target.value)}
-                ></ListInput>
+                    input={false}
+                >
+                    <input
+                        type="text"
+                        slot="input"
+                        placeholder="Search"
+                        onKeyUp={(ev) => {
+                            if (ev.code == "Enter") requestGenerator();
+                        }}
+                    ></input>
+                </ListInput>
                 <ListItem>
                     <span style={{ display: f7.device.desktop ? "none" : "default" }}></span>
                     <Button fill onClick={requestGenerator}>
