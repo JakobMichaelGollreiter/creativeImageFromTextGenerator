@@ -40,6 +40,7 @@ const HomePage = function () {
       if (response.status == 201) {
         response.json().then((data) => {
           f7.dialog.close();
+          setSearchstring("")
           f7.views.main.router.navigate(`/generator/${data.id}/`)
         })
       }else{
