@@ -133,7 +133,7 @@ export default function Genrate(props) {
           src={slideData[index].src} //must be loading.gif!
           className="swiper-lazy"
           style={slideData[index].like ? { opacity: 0.7 } : { opacity: 1 }}
-          alt="Bild wird geladen."
+          alt=""
         ></img>
         </div>
         <Icon
