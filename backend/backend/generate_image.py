@@ -5,6 +5,8 @@ from pathlib import Path
 import sys
 import os
 from vqgan.wodone_mod_words import wodone_adjectives
+from main import db
+
 from models.generators import generators
 from models.images import images
 
@@ -13,13 +15,26 @@ def generate_image(image_id):
 
 	globalimagedirpath = "/var/www/html/images"
 
-	texts = generators.query.get(images.generator_id) #digga keine Ahnung
-	imgpath = globalimagedirpath + "/" + str(texts)
+	#texts = generators.query.get(images.generator_id) #digga keine Ahnung
+	current_image = images.query.get(image_id)
+	texts = current_image.generator.search
 
-	modifiers = images.seed # wie zur hölle
+	imgpathrel = str(image_id)
+
+	modifiers = current_image.seed
 	for wordindex in modifiers:
 		texts = wodone_adjectives[int(wordindex)] + " " + texts
-		imgpath = imgpath + "/" + str(wordindex)
+		imgpathrel = imgpathrel + "/" + str(wordindex)
+
+	imgpath = globalimagedirpath + "/" + imgpathrel
+	imgpathdb = "/api/images/" + imgpathrel
+
+	if False:
+		print("texts: " + texts)
+		print("modifiers: ", modifiers)
+		print("imagepath relative: " + imgpathrel)
+		print("imagepath on disk: " + imgpath)
+		print("image filepath for database: " + imgpathdb + "/image.png")
 
 	#create directory and add unfinished flag
 	Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
@@ -37,7 +52,8 @@ def generate_image(image_id):
 	import argparse
 	import math
 
-	sys.path.insert(1, '/usr/local/bin/api/vqgan/taming-transformers')
+	# vorher hats auch funktioniert?
+	#sys.path.insert(1, '/usr/local/bin/api/vqgan/taming-transformers')
 	#sys.path.insert(1, 'vqgan/taming-transformers')
 
 	from IPython import display
@@ -423,13 +439,16 @@ def generate_image(image_id):
 		#img.save(f"./steps/{i:03d}.png", pnginfo=metadata)
 		
 		img.save(imgpath + f"/steps/{i:03d}.png", pnginfo=metadata) 
+		#update database
+		current_image.path = imgpathdb + f"/steps/{i:03d}.png"
+		db.session.commit()
 		return result
 
 	def train(i):
 		opt.zero_grad()
 		lossAll = ascend_txt()
 
-		#save image on every step
+		#save image on every step (maybe comment out?)
 		out = synth(z)
 		TF.to_pil_image(out[0].cpu()).save(imgpath + "/image.png", pnginfo=metadata)
 		
@@ -454,6 +473,14 @@ def generate_image(image_id):
 #finally:
 	#remove flags
 	os.system("rm " + imgpath + "/unfinished")
-	os.system("rm rendering")
+	#os.system("rm rendering")
 	#remove generator steps (save disk space)
 	os.system("rm -r " + imgpath + "/steps")
+
+
+
+
+	#set database entry to be finished
+	current_image.generated = True
+	current_image.path = imgpathdb + "/image.png"
+	db.session.commit()
