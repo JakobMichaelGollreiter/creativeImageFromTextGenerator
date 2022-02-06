@@ -35,49 +35,49 @@ services:
     #                       count: all
     #                       capabilities: [gpu]
 
-    flask:
-        build: backend/
-        dockerfile: backend/dockerfile-vqgan
-        container_name: wodone_flask
-        links:
-            - database
-        restart: always
-        ports:
-            - 127.0.0.1:8081:80
-        env_file:
-            - ./environment.env
-        volumes:
-            - type: volume
-              source: wodone_images
-              target: /var/www/html/images
-              read_only: true
-        networks:
-            - wodone
-            - wodone_database_net
+  flask:
+      build: 
+        context: backend/
+        dockerfile: dockerfile-flask
+      container_name: wodone_flask
+      links:
+          - database
+      restart: always
+      ports:
+          - 127.0.0.1:8081:80
+      env_file:
+          - ./environment.env
+      volumes:
+          - type: volume
+            source: wodone_images
+            target: /var/www/html/images
+            read_only: true
+      networks:
+          - wodone
+          - wodone_database_net
 
-    vqgan:
-        build: backend/
-        dockerfile: backend/dockerfile-vqgan
-        container_name: wodone_vqgan
-        links:
-            - database
-        restart: always
-        ports:
-            - 127.0.0.1:8081:80
-        env_file:
-            - ./environment.env
-        volumes:
-            - wodone_images:/var/www/html/images
-        networks:
-            - wodone
-            - wodone_database_net
-        deploy:
-            resources:
-                reservations:
-                    devices:
-                        - driver: nvidia
-                          count: all
-                          capabilities: [gpu]
+  vqgan:
+      build: 
+        context: backend/
+        dockerfile: dockerfile-vqgan
+      container_name: wodone_vqgan
+      links:
+          - database
+      restart: always
+      env_file:
+          - ./environment.env
+      volumes:
+          - wodone_images:/var/www/html/images
+      networks:
+          - wodone
+          - wodone_database_net
+      deploy:
+          resources:
+              reservations:
+                  devices:
+                      - driver: nvidia
+                        count: all
+                        capabilities: [gpu]
 
   webfrontend:
     build: frontend/
@@ -92,6 +92,7 @@ services:
 
 volumes:
   database:
+  wodone_images:
 
 networks:
   wodone:
