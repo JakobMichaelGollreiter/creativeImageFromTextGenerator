@@ -9,7 +9,7 @@ class images(db.Model):
 	seed = db.Column(db.JSON)
 	liked = db.Column(db.Boolean)
 	generator_id = db.Column(db.Integer, db.ForeignKey('generators.id'))
-	generator = db.relationship("generators")
+	generator = db.relationship("generators", back_populates="images")
 	def __init__(self, generator_id, identifier, seed, liked=False):
 		self.generator_id = generator_id
 		self.identifier = identifier
