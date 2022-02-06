@@ -1,6 +1,6 @@
 from flask import Flask, json, jsonify, request
 from main import api, db
-#from vqgan.get_image import get_image
+#from sqlalchemy import or_
 from vqgan.wodone_mod_words import wodone_adjectives
 from models.generators import generators
 from models.images import images
@@ -43,9 +43,14 @@ def requestImage(generatorID, imageID):
             db.session.commit()
         elif int(imageID) == highestID:
             img = images.query.filter(images.generator_id == generatorID, images.identifier == imageID).one()
+            img_seed = img.seed
             # (Only) the last image is recreated if Likes have changed
-            if not img.liked and not [*getBaseSeed(generatorID), img.seed[len(img.seed)-1]] == img.seed:
-                img.seed = [*getBaseSeed(generatorID), img.seed[len(img.seed)-1]] # This guaranties that linking and unlinking the previous image does not generate to much server load
+            if not img.liked and not [*getBaseSeed(generatorID), img_seed[len(img_seed)-1]] == img_seed:
+                db.session.delete(img)
+                db.session.commit()
+                seed = [*getBaseSeed(generatorID), img_seed[len(img_seed)-1]] # This guaranties that linking and unlinking the previous image does not generate to much server load
+                del img
+                img = images(generatorID,highestID,seed)
                 db.session.commit() #TODO maybe use flush and ony one commit at the end
         else:
              img = images.query.filter(images.generator_id == generatorID, images.identifier == imageID).one()
@@ -57,6 +62,7 @@ def requestImage(generatorID, imageID):
         else:
             # first check if an equivalent image exists
             eq = images.query.join(generators).filter(generators.search == gen.search, images.seed == img.seed, images.id != img.id).order_by(images.id.asc()).first()
+            #eq = images.query.join(generators).filter(generators.search == gen.search, images.seed == img.seed, images.id != img.id, or_(images.identifier >= 0, images.generated == True)).order_by(images.id.asc()).first()
             if eq:
                 img.path = eq.path
                 imgPath = eq.path
