@@ -44,19 +44,15 @@ const HomePage = function () {
 
             <BlockTitle>Suchbegriff eingeben</BlockTitle>
             <List noHairlinesMd>
-                <ListInput
-                    outline
-                    clearButton
-                    value={searchstring}
-                    onChange={(e) => setSearchstring(e.target.value)}
-                    input={false}
-                >
+                <ListInput outline clearButton input={false}>
                     <input
                         type="text"
                         slot="input"
                         placeholder="Search"
-                        onKeyUp={(ev) => {
-                            if (ev.code == "Enter") requestGenerator();
+                        value={searchstring}
+                        onChange={(e) => setSearchstring(e.target.value)}
+                        onKeyUp={(e) => {
+                            if (e.code == "Enter") requestGenerator();
                         }}
                     ></input>
                 </ListInput>
