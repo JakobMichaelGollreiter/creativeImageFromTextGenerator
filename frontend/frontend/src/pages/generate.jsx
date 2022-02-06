@@ -52,6 +52,28 @@ export default function Genrate(props) {
         };
     }
 
+    const getSlideIndexByRealIndex = function (ri) {
+        if (actualIndex == ri) {
+            return currentSlideVisible;
+        } else if (actualIndex == ri + 1) {
+            if (actualIndex == 0) {
+                return 2;
+            } else if (actualIndex == 1) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else if (actualIndex == ri - 1) {
+            if (actualIndex == 0) {
+                return 1;
+            } else if (actualIndex == 1) {
+                return 2;
+            } else {
+                return 3;
+            }
+        }
+        return -1;
+    };
     async function getSlideDataBySlideIndex(slideIndex) {
         return await getSlideDataByRealIndex(actualIndex + getDirection(currentSlideVisible, slideIndex));
     }
@@ -84,37 +106,48 @@ export default function Genrate(props) {
     // create slides
     const makeSlide = function (index) {
         // index must be either 0, 1 or 2 !!!
+        ai = actualIndex;
+        cl = slideData[index].like;
         async function like(c) {
-            if (!slideData[index].like) {
+            if (!cl) {
                 f7.notification
                     .create({
                         icon: '<img src="/icons/favicon.png">',
                         title: "Direkter Link zu diesem Bild",
                         //subtitle: '',
-                        text: `${window.location.protocol}//${window.location.host}/#!/generator/${props.generatorID}/${actualIndex}/`,
+                        text: `${window.location.protocol}//${window.location.host}/#!/generator/${props.generatorID}/${ai}/`,
                         closeButton: true,
                         closeTimeout: 4000,
                     })
                     .open();
             }
-            const response = await fetch(`/api/generators/${props.generatorID}/${actualIndex}`, {
+            const response = await fetch(`/api/generators/${props.generatorID}/${ai}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ like: !slideData[index].like }),
+                body: JSON.stringify({ like: !cl }),
             }).catch((error) => {
                 console.error("Error:", error);
                 f7.dialog.alert("Verbindungsfehler", "Es konnte keine Verbindung zum Webserver hergestellt werden.");
             });
             if (response.status == 200) {
                 const data = await response.json();
-                console.log(data);
-                const d0 = await getSlideDataBySlideIndex(0);
-                const d1 = await getSlideDataBySlideIndex(1);
-                const d2 = await getSlideDataBySlideIndex(2);
-                slideData = [d0, d1, d2];
-                setSwiperState();
+                const d0 = await getSlideDataByRealIndex(ai);
+                const d1 = await getSlideDataByRealIndex(ai + 1);
+                const s0 = getSlideIndexByRealIndex(ai);
+                const s1 = getSlideIndexByRealIndex(ai + 1);
+                let sd = slideData;
+                if (s0 != -1) {
+                    sd[s0] = d0;
+                }
+                if (s1 != -1) {
+                    sd[s1] = d1;
+                }
+                if (sd != slideData) {
+                    slideData = sd;
+                    setSwiperState();
+                }
             } else {
                 f7.dialog.alert("Serverfehler", "Anfrage fehlgeschlagen");
             }
@@ -203,12 +236,12 @@ export default function Genrate(props) {
     };
     async function refreshGenerating() {
         if (slideData[currentSlideVisible].generating) {
-            const c = currentSlideVisible; //zwischenspeichern zum Prüfen
-            const d = await getSlideDataBySlideIndex(currentSlideVisible);
-            if (c == currentSlideVisible) {
-                slideData[c] = d;
-                console.log("hier", d, d.generating);
-                if (d.generating == false) {
+            const ai = actualIndex;
+            const d = await getSlideDataByRealIndex(actualIndex);
+            const s0 = getSlideIndexByRealIndex(ai);
+            if (s0 != -1) {
+                slideData[s0] = d;
+                if (d.generating == false && s0 == currentSlideVisible) {
                     swiperRef.allowSlideNext = true;
                     document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
                 }
