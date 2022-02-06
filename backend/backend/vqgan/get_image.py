@@ -22,7 +22,8 @@ def get_image(prompt, modifiers):
     else:
         print("Not found, generating new image")
         status = 1
-        imgfilepath = Path(imgpath + "/steps/000.png")
+        #return fake image so frontend can immediately display something
+        imgfilepath = Path("./000_sample.png")
         modifierstring = ""
         for mod in modifiers:
             modifierstring = modifierstring + " " + str(mod)
