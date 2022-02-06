@@ -8,13 +8,14 @@ USER root
 
 RUN apt-get update && apt-get install -y --no-install-recommends nginx mariadb-client python3 python3-pip uwsgi uwsgi-plugin-python3
 
+COPY python-requirements.txt /tmp
+
+RUN pip3 install -r /tmp/python-requirements.txt
+
+#RUN rm -r /etc/nginx/sites-enabled/*
 
 RUN mkdir /usr/local/bin/api
 ADD backend /usr/local/bin/api
-
-RUN pip3 install -r /usr/local/bin/api/requirements.txt
-
-#RUN rm -r /etc/nginx/sites-enabled/*
 
 COPY default /etc/nginx/sites-enabled/
 COPY backend/vqgan/000_sample.png /var/www/html/images/
