@@ -473,7 +473,7 @@ def generate_image(image_id):
 #finally:
 	#remove flags
 	os.system("rm " + imgpath + "/unfinished")
-	os.system("rm rendering")
+	#os.system("rm rendering")
 	#remove generator steps (save disk space)
 	os.system("rm -r " + imgpath + "/steps")
 

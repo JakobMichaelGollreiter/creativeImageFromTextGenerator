@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends nginx mariadb-c
 
 COPY python-requirements.txt /tmp
 
+#fuck nvidia drivers
+RUN pip3 uninstall -y torch torchtext
 RUN pip3 install -r /tmp/python-requirements.txt
 
 #RUN rm -r /etc/nginx/sites-enabled/*
