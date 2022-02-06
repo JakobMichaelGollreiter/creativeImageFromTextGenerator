@@ -12,7 +12,7 @@ services:
     networks:
       - wodone_database_net
 
-  backend:
+  api:
     build: backend/
     container_name: wodone_backend
     links:
