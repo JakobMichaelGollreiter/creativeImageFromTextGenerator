@@ -6,15 +6,14 @@ ENV VERSION "1"
 
 USER root
 
-RUN apt-get update && apt-get install -y --no-install-recommends nginx mariadb-client python3 python3-pip uwsgi uwsgi-plugin-python3
-
-COPY python-requirements.txt /tmp
-
-#fuck nvidia drivers
+RUN apt-get update && apt-get install -y --no-install-recommends mariadb-client python3 python3-pip
 RUN pip3 uninstall -y torch torchtext
-RUN pip3 install -r /tmp/python-requirements.txt
 
-#RUN rm -r /etc/nginx/sites-enabled/*
+COPY python-requirements-flask.txt /tmp
+COPY python-requirements-vqgan.txt /tmp
+
+RUN pip3 install -r /tmp/python-requirements-flask.txt
+RUN pip3 install -r /tmp/python-requirements-vqgan.txt
 
 RUN mkdir /usr/local/bin/api
 RUN mkdir /usr/local/bin/api/vqgan
@@ -27,10 +26,9 @@ RUN cd /usr/local/bin/api/vqgan && \
 
 COPY backend /usr/local/bin/api
 
-COPY default /etc/nginx/sites-enabled/
-COPY backend/vqgan/000_sample.png /var/www/html/images/
+COPY backend/vqgan/giphy.gif /var/www/html/images/
 
-COPY entrypoint.sh /workspace/
-RUN chmod +x /workspace/entrypoint.sh
+COPY entrypoint-vqgan.sh /workspace/
+RUN chmod +x /workspace/entrypoint-vqgan.sh
 
-CMD ["./entrypoint.sh"]
+CMD ["./entrypoint-vqgan.sh"]

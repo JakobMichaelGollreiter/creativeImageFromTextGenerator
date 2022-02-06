@@ -12,9 +12,11 @@ services:
         networks:
             - wodone_database_net
 
-    api:
-        build: backend/
-        container_name: wodone_backend
+    flask:
+        build:
+            context: backend/
+            dockerfile: dockerfile-flask
+        container_name: wodone_flask
         links:
             - database
         restart: always
@@ -23,10 +25,33 @@ services:
         env_file:
             - ./environment.env
         volumes:
+            - type: volume
+              source: wodone_images
+              target: /var/www/html/images
+              read_only: true
+        networks:
+            - wodone
+            - wodone_database_net
+
+    vqgan:
+        build:
+            context: backend/
+            dockerfile: dockerfile-vqgan
+        container_name: wodone_vqgan
+        links:
+            - database
+        restart: always
+        env_file:
+            - ./environment.env
+        volumes:
             - wodone_images:/var/www/html/images
         networks:
             - wodone
             - wodone_database_net
+        ulimits:
+            memlock: "-1"
+            stack: "67108864"
+        ipc: host
         deploy:
             resources:
                 reservations:
