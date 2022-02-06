@@ -1,9 +1,11 @@
 import { click, show } from "dom7";
 import { Navbar, Page, Swiper, SwiperSlide, Icon, f7ready, f7, NavLeft, Link, NavRight, NavTitle } from "framework7-react";
 import React from "react";
-import SwiperCore, { Lazy, Virtual } from 'swiper';
+import SwiperCore, {Navigation, Mousewheel} from 'swiper';
 import "../css/generate.less";
 import { useState, useEffect } from "react";
+
+SwiperCore.use([Navigation, Mousewheel]);
 
 export default function Genrate(props) {
 
