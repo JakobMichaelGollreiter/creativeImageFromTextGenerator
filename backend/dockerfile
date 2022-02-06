@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM nvcr.io/nvidia/pytorch:22.01-py3
 
 ENV DEBIAN_FRONTEND noninteractive
 

@@ -25,6 +25,13 @@ services:
     networks:
       - wodone
       - wodone_database_net
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
 
   webfrontend:
     build: frontend/
