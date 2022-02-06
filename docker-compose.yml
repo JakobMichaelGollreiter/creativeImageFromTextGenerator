@@ -12,29 +12,6 @@ services:
         networks:
             - wodone_database_net
 
-    # api:
-    #     build: backend/
-    #     container_name: wodone_backend
-    #     links:
-    #         - database
-    #     restart: always
-    #     ports:
-    #         - 127.0.0.1:8081:80
-    #     env_file:
-    #         - ./environment.env
-    #     volumes:
-    #         - wodone_images:/var/www/html/images
-    #     networks:
-    #         - wodone
-    #         - wodone_database_net
-    #     deploy:
-    #         resources:
-    #             reservations:
-    #                 devices:
-    #                     - driver: nvidia
-    #                       count: all
-    #                       capabilities: [gpu]
-
     flask:
         build:
             context: backend/
@@ -71,6 +48,10 @@ services:
         networks:
             - wodone
             - wodone_database_net
+        ulimits:
+            memlock: "-1"
+            stack: "67108864"
+        ipc: host
         deploy:
             resources:
                 reservations:
