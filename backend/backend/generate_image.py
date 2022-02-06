@@ -8,6 +8,8 @@ from vqgan.wodone_mod_words import wodone_adjectives
 from models.generators import generators
 from models.images import images
 
+print("test")
+
 def generate_image(image_id):
 	########################## PARAMETERS FROM CMDLINE ARE PARSED HERE ##########################
 
