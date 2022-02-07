@@ -66,6 +66,20 @@ def requestImage(generatorID, imageID):
             img = images(generatorID,highestID+1,seed)
             db.session.add(img)
             db.session.commit() 
+        elif int(imageID) == highestID:
+            # Wenn das neuste Bild angefragt wird, prüfen, ob sich die Likes in der Zwischenzeit geändert haben
+            # und das Bild neu generiert werden soll
+            img = images.query.filter(images.generator_id == generatorID, images.identifier == imageID).one()
+            img_seed = img.seed
+            # auf geänderte Likes prüfen
+            if not img.liked and not [*getBaseSeed(generatorID), img_seed[len(img_seed)-1]] == img_seed:
+                db.session.delete(img)
+                db.session.commit()
+                seed = [*getBaseSeed(generatorID), img_seed[len(img_seed)-1]] # This guaranties that linking and unlinking the previous image does not generate to much server load
+                del img
+                img = images(generatorID,highestID,seed)
+                db.session.add(img)
+                db.session.commit()
         else:
             # Wenn ein "altes" Bild abgefragt wird, dessen Informationen aus der Datenbank holen
             img = images.query.filter(images.generator_id == generatorID, images.identifier == imageID).one()
@@ -113,16 +127,6 @@ def requestImage(generatorID, imageID):
             img.liked = True
         else:
             img.liked = False
-        # prüfen, ob das ge(un)likte Bild nicht das letzte war
-        # wenn ja und das letzte Bild nicht geliked ist, das letzte Bild ersetzen, sodass das Like dort berücksichtigt
-        # wird
-        highestIDimg = images.query.filter(images.generator_id == generatorID).order_by(images.identifier.desc()).first()
-        highestID = highestIDimg.identifier
-        if img.identifier < highestID and not highestIDimg.liked:
-            seed = [*getBaseSeed(generatorID), highestIDimg.seed[len(highestIDimg.seed)-1]]
-            db.session.delete(highestIDimg)
-            newImg = images(generatorID,highestID,seed)
-            db.session.add(newImg)
 
         db.session.commit()
         return jsonify({"status": "ok"}), 200

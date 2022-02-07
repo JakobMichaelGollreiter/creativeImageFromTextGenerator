@@ -130,6 +130,11 @@ export default function Generate(props) {
             });
             if (response.status == 200) {
                 const data = await response.json();
+                // like animation starten und automatisch beenden
+                if(!slideData[index].like){
+                    setlikeAnimation(true)
+                    setTimeout(()=>{setlikeAnimation(false)},1000)
+                }
                 // alle Slides aktuallisieren, sodass Veränderungen durch das Liken angezeigt werden.
                 const d0 = await getSlideDataBySlideIndex(0);
                 const d1 = await getSlideDataBySlideIndex(1);
@@ -141,13 +146,20 @@ export default function Generate(props) {
                 f7.dialog.alert("Serverfehler", "Anfrage fehlgeschlagen");
             }
         }
+        const [likeAnimation, setlikeAnimation] = useState(false);
         return (
             <SwiperSlide index={index} key={index} virtualIndex={index} onDoubleClick={like}>
                 <div className="heart-underlaying-image">
                     <img
                         src={slideData[index].src}
                         className="swiper-lazy"
-                        style={slideData[index].like ? { opacity: 0.7 } : { opacity: 1 }}
+                        //style={slideData[index].like ? { opacity: 0.7 } : { opacity: 1 }}
+                        style={
+                            {
+                                border: slideData[index].like ? "10px solid greenyellow": undefined,
+                                opacity: likeAnimation ? 0.7 : 1
+                            }
+                        }
                         alt=""
                     ></img>
                 </div>
@@ -155,7 +167,7 @@ export default function Generate(props) {
                     slot="media"
                     f7="heart_circle"
                     className="heart-icon"
-                    style={slideData[index].like ? { opacity: 1 } : { opacity: 0 }}
+                    style={likeAnimation ? { opacity: 1 } : { opacity: 0 }}
                 ></Icon>
                 {/*<button className="likeBtn" onClick={like}>
                 <Icon
