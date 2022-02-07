@@ -12,8 +12,6 @@ while ! mysqladmin ping -h"$MYSQL_HOST" --silent; do
     sleep 1
 done
 
-echo "connected! waiting another 10 pointless seconds..."
-sleep 10
 echo "done! now starting generator daemon"
 
 cd /usr/local/bin/api
