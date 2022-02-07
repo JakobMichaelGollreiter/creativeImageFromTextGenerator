@@ -232,12 +232,10 @@ export default function Genrate(props) {
         }
         //lock sliding foreward if image is still generating
         if (slideData[ev.realIndex].generating) {
-            console.log("generrating")
             ev.allowSlideNext = false;
             document.getElementsByClassName("swiper-button-next")[0].classList.add("swiper-button-disabled");
             //refreshGenerating()
         } else {
-            console.log("not gen")
             ev.allowSlideNext = true;
             document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
         }
@@ -246,15 +244,6 @@ export default function Genrate(props) {
         if (slideData[currentSlideVisible].generating) {
             const ai = actualIndex;
             const d = await getSlideDataByRealIndex(actualIndex);
-            let sd = slideData
-            sd[currentSlideVisible] = d
-            setSlideData(sd);
-            if (d.generating == false) {
-                swiperRef.allowSlideNext = true;
-                document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
-            }
-            console.log("ok")
-            return
             const s0 = getSlideIndexByRealIndex(ai);
             if (s0 != -1) {
                 console.log("next")

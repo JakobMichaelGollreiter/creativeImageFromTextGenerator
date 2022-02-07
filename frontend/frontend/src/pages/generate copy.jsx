@@ -1,4 +1,3 @@
-import { data } from "dom7";
 import { f7, f7ready, Icon, Link, Navbar, NavLeft, NavTitle, Page, Swiper, SwiperSlide } from "framework7-react";
 import React, { useState, useEffect } from "react";
 import SwiperCore, { Mousewheel, Navigation } from "swiper";
@@ -16,8 +15,8 @@ export default function Genrate(props) {
          generating: false,
      };
      const [slideData, setSlideData] = useState([slideDummy, slideDummy, slideDummy]);
+     //var currentSlideVisible = 0
      const [currentSlideVisible, setCurrentSlideVisible] = useState(0)
-     const [actualIndex, setActualIndex] = useState(0)
 
      //define interval
      useEffect(() => {
@@ -58,38 +57,34 @@ export default function Genrate(props) {
                 generating: generating,
             };
         } else if (response.status == 202) {
-            return {
-                src: `https://placekitten.com/${800}`,
-                like: false,
-                generating: false,
-            };
+            const data = await response.json();
         } else {
             f7.dialog.alert("Serverfehler", "Anfrage fehlgeschlagen");
         }
         //f7.dialog.alert("Verbindungsfehler", "Es konnte keine Verbindung zum Webserver hergestellt werden.");
-        console.error(rI, response.status, data);
+
         return {
             src: `https://placekitten.com/${800}`,
             like: false,
-            generating: false,
+            generating: true,
         };
     }
 
     const getSlideIndexByRealIndex = function (ri) {
-        if (actualIndex == ri) {
+        if (window.actualIndex == ri) {
             return currentSlideVisible;
-        } else if (actualIndex == ri + 1) {
-            if (actualIndex == 0) {
+        } else if (window.actualIndex == ri + 1) {
+            if (window.actualIndex == 0) {
                 return 2;
-            } else if (actualIndex == 1) {
+            } else if (window.actualIndex == 1) {
                 return 0;
             } else {
                 return 1;
             }
-        } else if (actualIndex == ri - 1) {
-            if (actualIndex == 0) {
+        } else if (window.actualIndex == ri - 1) {
+            if (window.actualIndex == 0) {
                 return 1;
-            } else if (actualIndex == 1) {
+            } else if (window.actualIndex == 1) {
                 return 2;
             } else {
                 return 3;
@@ -97,17 +92,14 @@ export default function Genrate(props) {
         }
         return -1;
     };
-    async function getSlideDataBySlideIndex(slideIndex) {
-        return await getSlideDataByRealIndex(actualIndex + getDirection(currentSlideVisible, slideIndex));
-    }
 
 
     // create slides
     const makeSlide = function (index) {
         // index must be either 0, 1 or 2 !!!
+        const ai = window.actualIndex;
+        const cl = slideData[index].like;
         async function like(c) {
-            const ai = actualIndex;
-            const cl = slideData[index].like;
             if (!cl) {
                 f7.notification
                     .create({
@@ -150,7 +142,6 @@ export default function Genrate(props) {
                 f7.dialog.alert("Serverfehler", "Anfrage fehlgeschlagen");
             }
         }
-        console.log(slideData)
         return (
             <SwiperSlide index={index} key={index} virtualIndex={index} onDoubleClick={like}>
                 <div className="heart-underlaying-image">
@@ -191,15 +182,13 @@ export default function Genrate(props) {
         // figure out swipe direction
         const direction = getDirection(currentSlideVisible, ev.realIndex);
         setCurrentSlideVisible(ev.realIndex);
-        let ai = actualIndex
         if (direction === -1) {
-            ai--;
-            setActualIndex(ai)
+            window.actualIndex = window.actualIndex -1
             const indexToModify = (ev.realIndex + 2) % 3; // like -1 but always positive
             let sd = slideData;
             sd[indexToModify] = slideDummy; //TODO WHY
             setSlideData(sd)
-            getSlideDataByRealIndex(ai - 1).then((data) => {
+            getSlideDataByRealIndex(window.actualIndex - 1).then((data) => {
                 if (data != null) {
                     let sd2 = slideData;
                     sd2[indexToModify] = data;
@@ -207,13 +196,12 @@ export default function Genrate(props) {
                 }
             });
         } else if (direction === 1) {
-            ai++
-            setActualIndex(ai)
+            window.actualIndex = window.actualIndex +1
             const indexToModify = (ev.realIndex + 1) % 3;
             let sd = slideData;
             sd[indexToModify] = slideDummy; //TODO WHY
             setSlideData(sd)
-            getSlideDataByRealIndex(ai + 1).then((data) => {
+            getSlideDataByRealIndex(window.actualIndex + 1).then((data) => {
                 if (data != null) {
                     let sd2 = slideData;
                     sd2[indexToModify] = data;
@@ -221,9 +209,9 @@ export default function Genrate(props) {
                 }
             });
         }
-        console.log(ai, ev.realIndex, direction)
+        console.log(window.actualIndex, ev.realIndex, direction)
         // allow sliding back only if not on first page
-        if (ai == 0) {
+        if (window.actualIndex == 0) {
             ev.allowSlidePrev = false;
             document.getElementsByClassName("swiper-button-prev")[0].classList.add("swiper-button-disabled"); //TODO: Error handeling
         } else {
@@ -232,35 +220,22 @@ export default function Genrate(props) {
         }
         //lock sliding foreward if image is still generating
         if (slideData[ev.realIndex].generating) {
-            console.log("generrating")
             ev.allowSlideNext = false;
             document.getElementsByClassName("swiper-button-next")[0].classList.add("swiper-button-disabled");
-            //refreshGenerating()
         } else {
-            console.log("not gen")
             ev.allowSlideNext = true;
             document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
         }
     };
     async function refreshGenerating() {
         if (slideData[currentSlideVisible].generating) {
-            const ai = actualIndex;
-            const d = await getSlideDataByRealIndex(actualIndex);
-            let sd = slideData
-            sd[currentSlideVisible] = d
-            setSlideData(sd);
-            if (d.generating == false) {
-                swiperRef.allowSlideNext = true;
-                document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
-            }
-            console.log("ok")
-            return
+            const ai = window.actualIndex;
+            const d = await getSlideDataByRealIndex(window.actualIndex);
             const s0 = getSlideIndexByRealIndex(ai);
             if (s0 != -1) {
-                console.log("next")
                 let sd = slideData;
                 sd[s0] = d;
-                if (d.generating == false && s0 == currentSlideVisible) {
+                if (d.generating == false && ai == window.actualIndex) {
                     swiperRef.allowSlideNext = true;
                     document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
                 }
@@ -270,17 +245,16 @@ export default function Genrate(props) {
         }
     }
     async function initialize(ev) {
-        console.log("initialize")
-        let ai = actualIndex
         if ("imageID" in props) {
-            ai = parseInt(props.imageID)
-            setActualIndex(ai);
+            window.actualIndex = parseInt(props.imageID)
             setBackLink(false);
+        }else{
+            window.actualIndex = 0
         }
         f7.preloader.show();
-        const d0 = await getSlideDataByRealIndex(ai);
-        const d1 = await getSlideDataByRealIndex(ai + 1);
-        const d2 = await getSlideDataByRealIndex(ai - 1);
+        const d0 = await getSlideDataByRealIndex(window.actualIndex);
+        const d1 = await getSlideDataByRealIndex(window.actualIndex + 1);
+        const d2 = await getSlideDataByRealIndex(window.actualIndex - 1);
         setSlideData([d0, d1, d2]);
         f7.preloader.hide();
         realIndexChange(ev);
@@ -319,7 +293,6 @@ export default function Genrate(props) {
                         initialize(ev);
                     });
                 }}
-                
             >
                 {slides}
             </Swiper>
