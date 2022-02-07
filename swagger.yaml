@@ -1,0 +1,232 @@
+swagger: "2.0"
+info:
+    version: "1.0.0"
+    title: "WoDone"
+#basePath: "/api"
+tags:
+    - name: "generators"
+      description: "Für jede Suchanfrage wird ein neuer generator erstellt"
+    - name: "images"
+      description: "Bilder generieren"
+    - name: "debug"
+      description: "Debug Endpunkt"
+schemes:
+    - "https"
+    - "http"
+paths:
+    /api/generators:
+        post:
+            tags:
+                - "generators"
+            summary: "Neue Suchanfrage stellen"
+            description: ""
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: "neue Suchanfrage"
+                  required: true
+                  schema:
+                      type: object
+                      properties:
+                          search:
+                              type: string
+            responses:
+                "201":
+                    description: "Erstellt"
+                    schema:
+                        type: object
+                        properties:
+                            id:
+                                type: integer
+                "401":
+                    description: "Benötigter Parameter fehlt"
+                    schema:
+                        type: object
+                        properties:
+                            status:
+                                type: integer
+                                example: "error"
+                            error:
+                                type: string
+        get:
+            tags:
+                - "generators"
+            summary: "Liste aller Suchanfragen"
+            description: ""
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "OK"
+                    schema:
+                        type: object
+                        properties:
+                            generators:
+                                type: array
+                                items:
+                                    type: object
+                                    properties:
+                                        id:
+                                            type: integer
+                                        search:
+                                            type: string
+    /api/debug/all_images:
+        get:
+            tags:
+                - "debug"
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "Liste aller Einträge der Datenbanktabelle images"
+                    schema:
+                        $ref: "#/definitions/all_images_schema"
+    /api/generators/{generatorID}/{imageID}:
+        get:
+            tags:
+                - "images"
+            produces:
+                - "application/json"
+            responses:
+                "200":
+                    description: "Ok - Bild gefunden"
+                    schema:
+                        type: object
+                        properties:
+                            status:
+                                type: string
+                                enum: ["generating", "ok"]
+                                example: "generating"
+                            imgPath:
+                                type: string
+                                example: "/api/images/giphy.gif"
+                            liked:
+                                type: boolean
+                "202":
+                    description: "{imageID} konnte (noch) nicht erstellt werden. Entweder, sie ist negativ, oder es müssen zuvor noch andere Bilder angefragt werden."
+                    schema:
+                        type: object
+                        properties:
+                            status:
+                                type: string
+                                enum:
+                                    - "empty"
+                                    - "wait"
+                                example: "wait"
+                            info:
+                                type: string
+                "404":
+                    description: "Bild nicht gefunden"
+                    schema:
+                        type: object
+                        properties:
+                            status:
+                                type: string
+                                example: "error"
+                            info:
+                                type: string
+        post:
+            tags:
+                - "images"
+            consumes:
+                - "application/json"
+            produces:
+                - "application/json"
+            parameters:
+                - in: "body"
+                  name: "body"
+                  description: "(un)liken des Bildes"
+                  required: true
+                  schema:
+                      type: object
+                      required:
+                          - "like"
+                      properties:
+                          like:
+                              type: boolean
+            responses:
+                "200":
+                    description: "ok"
+                    schema:
+                        type: object
+                        properties:
+                            status:
+                                type: integer
+                                example: "ok"
+                "401":
+                    description: "Benötigter Parameter fehlt"
+                    schema:
+                        type: object
+                        properties:
+                            status:
+                                type: integer
+                                example: "error"
+                            error:
+                                type: string
+                "404":
+                    description: "not found"
+                    schema:
+                        type: object
+                        properties:
+                            status:
+                                type: integer
+                                example: "error"
+                            error:
+                                type: string
+
+definitions:
+    all_images_schema:
+        type: array
+        items:
+            type: object
+            properties:
+                id:
+                    type: integer
+                identifier:
+                    type: integer
+                seed:
+                    type: array
+                    items:
+                        type: integer
+                liked:
+                    type: boolean
+                path:
+                    type: string
+                    example: "/api/images/giphy.gif"
+                    description: "Pfad zum Bild"
+                generated:
+                    type: boolean
+                generator_id:
+                    type: integer
+                generator.search:
+                    type: string
+
+    Order:
+        type: "object"
+        properties:
+            id:
+                type: "integer"
+                format: "int64"
+            petId:
+                type: "integer"
+                format: "int64"
+            quantity:
+                type: "integer"
+                format: "int32"
+            shipDate:
+                type: "string"
+                format: "date-time"
+            status:
+                type: "string"
+                description: "Order Status"
+                enum:
+                    - "placed"
+                    - "approved"
+                    - "delivered"
+            complete:
+                type: "boolean"
+                default: false

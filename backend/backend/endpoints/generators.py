@@ -16,6 +16,8 @@ def generators_function():
 	if request.method == 'POST':
 		# Add new generator to database with given keyword and return its id
 		data = request.json
+		if not "search" in data:
+			return jsonify({"status": "error", "error": "search not specified"}), 401
 		gen = generators(data["search"])
 		db.session.add(gen)
 		db.session.commit()
@@ -36,7 +38,7 @@ def generators_function():
 		}), 200
 
 # Der folgende Endpunkt gibt einen Auszug der Datenbank-Tabelle images zurück und dient lediglich zum debuggen.
-@api.route('/api/all_images', methods=['GET'])
+@api.route('/api/debug/all_images', methods=['GET'])
 def get_all_images():
 	imgs = images.query.all()
 	res = []
