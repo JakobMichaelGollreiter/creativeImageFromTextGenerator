@@ -117,10 +117,11 @@ def requestImage(generatorID, imageID):
         # wenn ja und das letzte Bild nicht geliked ist, das letzte Bild ersetzen, sodass das Like dort berücksichtigt
         # wird
         highestIDimg = images.query.filter(images.generator_id == generatorID).order_by(images.identifier.desc()).first()
-        if img.identifier < highestIDimg.identifier and not highestIDimg.liked:
+        highestID = highestIDimg.identifier
+        if img.identifier < highestID and not highestIDimg.liked:
             seed = [*getBaseSeed(generatorID), highestIDimg.seed[len(highestIDimg.seed)-1]]
             db.session.delete(highestIDimg)
-            newImg = images(generatorID,img.identifier +1,seed)
+            newImg = images(generatorID,highestID,seed)
             db.session.add(newImg)
 
         db.session.commit()
