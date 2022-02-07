@@ -4,8 +4,9 @@ import ExplanationBlock from "../components/explanationBlock";
 const HomePage = function () {
     const [searchstring, setSearchstring] = useState("");
 
+    // wenn Suchanfrage gestellt wurde, neuen Generator vom Backend erzeugen lassen
+    // und dann anhand der vom Backend zurückgegebenen ID zu diesem wechseln
     const requestGenerator = function () {
-        console.log(searchstring);
         f7.dialog.preloader("Laden");
         fetch("/api/generators", {
             method: "POST",
@@ -38,8 +39,6 @@ const HomePage = function () {
             <Navbar>
                 <NavTitle sliding>WoDone</NavTitle>
             </Navbar>
-            {/* Page content */}
-
             {f7.device.desktop && <ExplanationBlock></ExplanationBlock>}
 
             <BlockTitle>Suchbegriff eingeben</BlockTitle>
@@ -63,9 +62,7 @@ const HomePage = function () {
                     </Button>
                 </ListItem>
             </List>
-
             {!f7.device.desktop && <ExplanationBlock></ExplanationBlock>}
-
             <List>
                 <ListItem title="Suchverlauf" link="/history/">
                     <Icon slot="media" f7="rectangle_stack_fill"></Icon>

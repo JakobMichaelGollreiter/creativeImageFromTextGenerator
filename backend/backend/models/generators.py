@@ -1,3 +1,11 @@
+############################################
+# WoDone
+# backend/backend/models/generators.py
+# Authors: Tobias Höpp
+# 
+# Datenbankmodell der Tabelle generators zum Speichern der Suchanfragen
+# und darstellen einer Suchhistorie.
+############################################
 from main import db
 
 class generators(db.Model):

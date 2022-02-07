@@ -20,7 +20,7 @@ wodone_adjectives = [
     "warming", "cold",
     #"energetic", "technical", "electric", "scientific",        #little impact
     "overgrown", "natural", "underground",                      #overgrown works well, the rest, meh
-    "broken", "ruined", "dirty", "destroyed", "abandoned"       #medium impact
+    "broken", "ruined", "dirty", "destroyed", "abandoned",      #medium impact
     "clean", "sterile", "pure", "heavenly",                     #little impact
     "burning", "fire", "smoking",                               #big impact
     "flooded", "water", "underwater", "sunken",                 #sometimes big impact

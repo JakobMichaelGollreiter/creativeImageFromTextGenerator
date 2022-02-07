@@ -1,3 +1,14 @@
+############################################
+# WoDone
+# frontend/dockerfile
+# Authors: Tobias Höpp
+# 
+# Dockerfile für wodone_frontend
+# Der Docker-Container liefert das Frontend aus
+# und dient als reverse proxy für wodone_flask
+############################################
+
+# Frontend in eigenem nodejs-Container kompillieren
 FROM node:lts-bullseye AS compile-node
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -8,6 +19,7 @@ WORKDIR /buildfolder
 RUN npm install
 RUN npm run build
 
+# Nginx-container nutzen, um Frontend auszuliefern
 FROM nginx:stable-alpine
 
 COPY --from=compile-node /buildfolder/www/ /usr/share/nginx/html/

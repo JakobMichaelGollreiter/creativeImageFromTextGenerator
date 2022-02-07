@@ -1,3 +1,12 @@
+############################################
+# WoDone
+# backend/dockerfile-flask
+# Authors: Tobias Höpp
+# 
+# Dockerfile für wodone_flask 
+# Der Docker-Container beinhaltet Python-Flask, um mittels der Datenbank Suchanfragen 
+# und Likes von Bildern zu speichern, sowie den Seed zur Generierung zu bestimmen
+############################################
 FROM debian:bullseye-slim
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -12,14 +21,12 @@ COPY python-requirements-flask.txt /tmp
 
 RUN pip3 install -r /tmp/python-requirements-flask.txt
 
-#RUN rm -r /etc/nginx/sites-enabled/*
-
 RUN mkdir /usr/local/bin/api
 COPY backend /usr/local/bin/api
 
 COPY default /etc/nginx/sites-enabled/
 
-COPY entrypoint.sh /
-RUN chmod +x /entrypoint.sh
+COPY entrypoint-flask.sh /
+RUN chmod +x /entrypoint-flask.sh
 
-CMD ["./entrypoint.sh"]
+CMD ["./entrypoint-flask.sh"]

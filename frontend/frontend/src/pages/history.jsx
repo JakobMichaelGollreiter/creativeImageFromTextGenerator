@@ -3,6 +3,8 @@ import { Page, Navbar, Block, List, ListItem, BlockTitle, PageContent, f7 } from
 
 const HistoryPage = () => {
     const [hist, setHist] = useState([]);
+
+    // History vom Server abfragen und anzeigen
     const initialize = function () {
         fetch("/api/generators", {
             method: "GET",
