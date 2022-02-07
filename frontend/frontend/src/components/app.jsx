@@ -1,56 +1,33 @@
-import React, { useState, useEffect } from "react";
-
-import {
-  f7,
-  f7ready,
-  App,
-  Panel,
-  Views,
-  View,
-  Popup,
-  Page,
-  Navbar,
-  Toolbar,
-  NavRight,
-  Link,
-  Block,
-  BlockTitle,
-  LoginScreen,
-  LoginScreenTitle,
-  List,
-  ListItem,
-  ListInput,
-  ListButton,
-  BlockFooter,
-} from "framework7-react";
-
+//////////////////////////////////////////////
+// WoDone
+// frontend/frontend/src/components/app.jsx
+// Authors: Tobias Höpp
+//
+// Root Komponente
+//////////////////////////////////////////////
+import { App, View } from "framework7-react";
+import React from "react";
 import routes from "../js/routes";
 import store from "../js/store";
 
 const MyApp = () => {
-  // Framework7 Parameters
-  const f7params = {
-    name: "WoDone", // App name
-    theme: "auto", // Automatic theme detection
-    // App store
-    store: store,
-    // App routes
-    routes: routes,
-  };
+    // Framework7 Parameters
+    const f7params = {
+        name: "WoDone", // App name
+        theme: "auto", // Automatic theme detection
+        // App store
+        store: store,
+        // App routes
+        routes: routes,
+    };
 
-  return (
-    <App {...f7params}>
-      {/* Left and right panel would be here if needed*/}
+    return (
+        <App {...f7params}>
+            {/* Left and right panel would be here if needed*/}
 
-      {/* Your main view, should have "view-main" class */}
-      <View
-        main
-        className="safe-areas"
-        url="/"
-        browserHistory={true}
-        browserHistorySeparator="#!"
-      />
-    </App>
-  );
+            {/* Your main view, should have "view-main" class */}
+            <View main className="safe-areas" url="/" browserHistory={true} browserHistorySeparator="#!" />
+        </App>
+    );
 };
 export default MyApp;

@@ -1,4 +1,10 @@
-import { data } from "dom7";
+///////////////////////////////////////////
+// WoDone
+// /frontend/frontend/src/pages/generate.jsx
+// Authors: Tobias Höpp, August Wittgenstein
+// Image-Swiper
+///////////////////////////////////////////
+
 import { f7, f7ready, Icon, Link, Navbar, NavLeft, NavTitle, Page, Swiper, SwiperSlide } from "framework7-react";
 import React, { useState, useEffect } from "react";
 import SwiperCore, { Mousewheel, Navigation } from "swiper";
@@ -6,13 +12,13 @@ import "../css/generate.less";
 
 SwiperCore.use([Navigation, Mousewheel]);
 
-export default function Genrate(props) {
-    //define interval
+export default function Generate(props) {
+    // interval setzen und sicherstellen, dass es auch wieder gelöscht wird
     useEffect(() => {
         const timer = setInterval(refreshGenerating, 500);
         return () => clearInterval(timer);
     });
-    //define utilitariean functions
+
     const getDirection = function (current, question) {
         // returns -1 for prev, 0 for current, 1 for next
         if (current == 0) {
@@ -27,11 +33,12 @@ export default function Genrate(props) {
         }
         return 0;
     };
-    let i = 0;
+
+    // Bild-Informationen vom Server abfragen
     async function getSlideDataByRealIndex(rI) {
         const response = await fetch(`/api/generators/${props.generatorID}/${rI}`, {
             method: "GET",
-        }); //TODO Catch connection failiure
+        });
         if (response.status == 200) {
             const data = await response.json();
             let generating = false;
@@ -45,11 +52,20 @@ export default function Genrate(props) {
                 generating: generating,
             };
         } else if (response.status == 202) {
+            // Der Server hat mitgeteilt, dass das Bild (noch) nicht generiert werden kann.
+            // Als Entschuldigung gibt es ein Katzenbild, welches jedoch nie tatsächlich angezeigt werden sollte
             const data = await response.json();
+            return {
+                src: `https://placekitten.com/${800}`,
+                like: false,
+                generating: true,
+            };
         } else {
+            f7.dialog.close();
             f7.dialog.alert("Serverfehler", "Anfrage fehlgeschlagen");
         }
-        //f7.dialog.alert("Verbindungsfehler", "Es konnte keine Verbindung zum Webserver hergestellt werden.");
+        f7.dialog.close();
+        f7.dialog.alert("Verbindungsfehler", "Es konnte keine Verbindung zum Webserver hergestellt werden.");
         return {
             src: `https://placekitten.com/${800}`,
             like: false,
@@ -58,14 +74,14 @@ export default function Genrate(props) {
     }
 
     async function getSlideDataBySlideIndex(slideIndex) {
+        // Hinweis: slideIndex ist der Index aus dem Swiper (0, 1 oder 2), RealIndex ist Synonym zu actualIndex
         return await getSlideDataByRealIndex(actualIndex + getDirection(currentSlideVisible, slideIndex));
     }
 
-    //define state
     const [swiperRef, setSwiperRef] = useState(null);
     const [backLink, setBackLink] = useState(true);
     const slideDummy = {
-        src: "", //"https://placekitten.com/800",
+        src: "",
         like: false,
         generating: false,
     };
@@ -74,7 +90,8 @@ export default function Genrate(props) {
         currentSlideVisible: 0,
         actualIndex: 0,
     });
-    //make it easy to work with state
+
+    // Das Arbeiten mit dem State leichter machen
     const setSwiperState = function () {
         actuallySetSwiperState({
             slides: slideData,
@@ -86,17 +103,15 @@ export default function Genrate(props) {
     let currentSlideVisible = swiperState.currentSlideVisible;
     let slideData = swiperState.slides;
 
-    // create slides
+    // Funktion zum Erstellen der anzuzeigenden Slides, index darf nur 0, 1 oder 2 sein (!)
     const makeSlide = function (index) {
-        // index must be either 0, 1 or 2 !!!
+        // Liken bzw. unliken Handeln
         async function like(c) {
-            //l = slideData[index].like;
             if (!slideData[index].like) {
                 f7.notification
                     .create({
                         icon: '<img src="/icons/favicon.png">',
                         title: "Direkter Link zu diesem Bild",
-                        //subtitle: '',
                         text: `${window.location.protocol}//${window.location.host}/#!/generator/${props.generatorID}/${actualIndex}/`,
                         closeButton: true,
                         closeTimeout: 4000,
@@ -110,17 +125,19 @@ export default function Genrate(props) {
                 },
                 body: JSON.stringify({ like: !slideData[index].like }),
             }).catch((error) => {
-                console.error("Error:", error);
+                f7.dialog.close();
                 f7.dialog.alert("Verbindungsfehler", "Es konnte keine Verbindung zum Webserver hergestellt werden.");
             });
             if (response.status == 200) {
                 const data = await response.json();
+                // alle Slides aktuallisieren, sodass Veränderungen durch das Liken angezeigt werden.
                 const d0 = await getSlideDataBySlideIndex(0);
                 const d1 = await getSlideDataBySlideIndex(1);
                 const d2 = await getSlideDataBySlideIndex(2);
                 slideData = [d0, d1, d2];
                 setSwiperState();
             } else {
+                f7.dialog.close();
                 f7.dialog.alert("Serverfehler", "Anfrage fehlgeschlagen");
             }
         }
@@ -141,32 +158,40 @@ export default function Genrate(props) {
                     style={slideData[index].like ? { opacity: 1 } : { opacity: 0 }}
                 ></Icon>
                 {/*<button className="likeBtn" onClick={like}>
-          <Icon
-            slot="media"
-            f7="heart_circle"
-            size={35}
-            style={slideData[index].like ? { color: "red" } : { color: "gray" }}
-            className="likeBtn-icon"
-          ></Icon>
-          Like
-        </button>
-        <div className="swiper-lazy-preloader swiper-lazy-preloader"></div>*/}
+                <Icon
+                    slot="media"
+                    f7="heart_circle"
+                    size={35}
+                    style={slideData[index].like ? { color: "red" } : { color: "gray" }}
+                    className="likeBtn-icon"
+                ></Icon>
+                Like
+                </button>*/}
             </SwiperSlide>
         );
     };
     const slides = Array.from({ length: 3 }).map((_, index) => makeSlide(index));
 
-    const realIndexChange = function (ev) {
-        /*
-    This function does some trickery to have infinite slides with just 3 dom elements.
-    The function is also called when the slider is initialized.
+    /*
+        Zum Renderen des Swipers wird ein Loop aus nur 3 Slides verwendet, da sich dies als praktikabelste Lösung
+        mit dem Swiper-Modul herausgestellt hat. Die Funktion realIndexChange wird bei jedem Slide-Vorgang ausgeführt
+        und berechnet den neuen tatsächlichen index (actualIndex) der angezeigten Slide. Anschließend werden die Slides
+        so verändert, dass rechts von der aktuell angezeigten Slide das Bild mit actualIndex+1 und links das bild mit
+        actualIndex-1 angezeigt wird.
+        Sollte das aktuelle Bild (der derzeit anzegeigten Slide) derzeit noch generiert werden, so wird die Funktion 
+        refreshGenerating mehrmals pro Sekunde den aktuellen generierungsstatus abfragen und das Bild durch die neuste 
+        Iteration ersetzen.
+        Liked man ein Bild, so werden alle Slides aktualisiert, um die Änderungen zu übernehmen.
     */
-        // figure out swipe direction
+    const realIndexChange = function (ev) {
+        // Swipe-Richtung herausfinden
+        // ev.realIndex ist der Index der aktuell angezeigten Slide (0, 1 oder 2)
         const direction = getDirection(currentSlideVisible, ev.realIndex);
         currentSlideVisible = ev.realIndex;
+        // actualIndex und slides react-state aktualisieren
         if (direction === -1) {
             actualIndex--;
-            const indexToModify = (ev.realIndex + 2) % 3; // like -1 but always positive
+            const indexToModify = (ev.realIndex + 2) % 3;
             slideData[indexToModify] = slideDummy;
             setSwiperState();
             getSlideDataByRealIndex(actualIndex - 1).then((data) => {
@@ -187,30 +212,30 @@ export default function Genrate(props) {
                 }
             });
         }
-        // allow sliding back only if not on first page and if not current image is still generating
+        // Zurücksliden nur genau dann erlauben, wenn das derzeit angezeigte Bild nicht das aller erste ist
         if (actualIndex == 0) {
-            // || slideData[ev.realIndex].generating) {
             ev.allowSlidePrev = false;
-            document.getElementsByClassName("swiper-button-prev")[0].classList.add("swiper-button-disabled"); //TODO: Error handeling
+            document.getElementsByClassName("swiper-button-prev")[0].classList.add("swiper-button-disabled");
         } else {
             ev.allowSlidePrev = true;
-            document.getElementsByClassName("swiper-button-prev")[0].classList.remove("swiper-button-disabled"); //TODO: Error handeling
+            document.getElementsByClassName("swiper-button-prev")[0].classList.remove("swiper-button-disabled");
         }
-        //lock sliding foreward if image is still generating
+        // Weitersliden nur genau dann erlauben, wenn das derzeit angezeigte Bild schon fertig generiert ist (sonst müsste man sowieso erst darauf warten, bevor etwas angezeigt wird)
         if (slideData[ev.realIndex].generating) {
             ev.allowSlideNext = false;
             document.getElementsByClassName("swiper-button-next")[0].classList.add("swiper-button-disabled");
-            //refreshGenerating()
         } else {
             ev.allowSlideNext = true;
             document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
         }
     };
+    // Prüfen, ob das aktuelle Bild noch generiert wird und es, wenn ja, aktualisieren
     async function refreshGenerating() {
         if (slideData[currentSlideVisible].generating) {
-            const c = currentSlideVisible; //zwischenspeichern zum Prüfen
+            const c = currentSlideVisible;
             const a = actualIndex;
             const d = await getSlideDataBySlideIndex(currentSlideVisible);
+            // nur dann aktualisieren, wenn in der Zwischenzeit sich die aktuelle Slide nicht geändert hat (sonst könnte ein falsches Bild aktualisiert werden)
             if (c == currentSlideVisible && a == actualIndex) {
                 slideData[c] = d;
                 if (d.generating == false) {
@@ -221,7 +246,9 @@ export default function Genrate(props) {
             }
         }
     }
+
     async function initialize(ev) {
+        // wenn ein Direkt-Link auf ein Bild verwendet wird, dieses Bild anzeigen statt Bild 0
         if ("imageID" in props) {
             actualIndex = parseInt(props.imageID);
             setBackLink(false);
@@ -258,8 +285,6 @@ export default function Genrate(props) {
                 centeredSlides={true}
                 allowSlidePrev={false}
                 loop
-                //virtual
-                //lazy={{ loadPrevNext: false, checkInView: true }}
                 navigation={f7.device.desktop}
                 mousewheel
                 keyboard

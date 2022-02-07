@@ -1,12 +1,13 @@
 #!/bin/bash
+############################################
+# WoDone
+# backend/entrypoint-flask.sh
+# Authors: Tobias Höpp, Bernhard Stöffler
+# 
+# Entrypoint für den wodone_vqgan container
+############################################
 
-# Function for a clean shutdown of the container
-function shutdown {
-    #kill -TERM "$NGINX_PROCESS" 2>/dev/null
-    exit
-}
-trap shutdown SIGTERM
-
+# Auf Datenbank warten
 while ! mysqladmin ping -h"$MYSQL_HOST" --silent; do
 	echo "connecting to sql..."
     sleep 1
@@ -14,6 +15,7 @@ done
 
 echo "done! now starting generator daemon"
 
+# vqgan-Daemon starten
 cd /usr/local/bin/api
 python3 generator_daemon.py
 

@@ -1,3 +1,12 @@
+############################################
+# WoDone
+# backend/dockerfile-vqgan
+# Authors: Tobias Höpp, Bernhard Stöffler
+# 
+# Dockerfile für wodone_vqgan 
+# Der Docker-Container beinhaltet fragt sequenziell die Datenbank nach neuen, zu generierenden Bildern
+# ab und generiert diese dann mittels vqgan
+############################################
 FROM nvcr.io/nvidia/pytorch:22.01-py3
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -19,7 +28,6 @@ RUN mkdir /usr/local/bin/api
 RUN mkdir /usr/local/bin/api/vqgan
 RUN cd /usr/local/bin/api/vqgan && \ 
 	git clone https://github.com/openai/CLIP && \
-	#git clone https://github.com/CompVis/taming-transformers.git taming_transformers && \
 	curl -L -o vqgan_imagenet_f16_16384.ckpt -C - 'https://heibox.uni-heidelberg.de/f/867b05fc8c4841768640/?dl=1' && \
 	curl -L -o vqgan_imagenet_f16_16384.yaml -C - 'https://heibox.uni-heidelberg.de/f/274fb24ed38341bfa753/?dl=1'
 
