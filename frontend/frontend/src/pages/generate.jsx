@@ -1,12 +1,17 @@
 import { data } from "dom7";
 import { f7, f7ready, Icon, Link, Navbar, NavLeft, NavTitle, Page, Swiper, SwiperSlide } from "framework7-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SwiperCore, { Mousewheel, Navigation } from "swiper";
 import "../css/generate.less";
 
 SwiperCore.use([Navigation, Mousewheel]);
 
 export default function Genrate(props) {
+    //define interval
+    useEffect(() => {
+        const timer = setInterval(refreshGenerating, 500);
+        return () => clearInterval(timer);
+    });
     //define utilitariean functions
     const getDirection = function (current, question) {
         // returns -1 for prev, 0 for current, 1 for next
@@ -45,10 +50,10 @@ export default function Genrate(props) {
             f7.dialog.alert("Serverfehler", "Anfrage fehlgeschlagen");
         }
         //f7.dialog.alert("Verbindungsfehler", "Es konnte keine Verbindung zum Webserver hergestellt werden.");
-        console.error(rI, response.status, data);
         return {
             src: `https://placekitten.com/${800}`,
             like: false,
+            generating: true,
         };
     }
 
@@ -85,7 +90,7 @@ export default function Genrate(props) {
     const makeSlide = function (index) {
         // index must be either 0, 1 or 2 !!!
         async function like(c) {
-            l = slideData[index].like;
+            //l = slideData[index].like;
             if (!slideData[index].like) {
                 f7.notification
                     .create({
@@ -231,8 +236,6 @@ export default function Genrate(props) {
         realIndexChange(ev);
     }
 
-    const refreshGeneratingTimeout = setTimeout(refreshGenerating, 600);
-
     return (
         <Page>
             <Navbar backLink={backLink ? "Zurück" : undefined}>
@@ -265,9 +268,6 @@ export default function Genrate(props) {
                     f7ready(() => {
                         initialize(ev);
                     });
-                }}
-                onBeforeDestroy={() => {
-                    clearInterval(refreshGeneratingTimeout);
                 }}
             >
                 {slides}
