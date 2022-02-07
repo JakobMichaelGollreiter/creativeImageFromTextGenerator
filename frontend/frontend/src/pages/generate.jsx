@@ -131,9 +131,11 @@ export default function Generate(props) {
             if (response.status == 200) {
                 const data = await response.json();
                 // like animation starten und automatisch beenden
-                if(!slideData[index].like){
-                    setlikeAnimation(true)
-                    setTimeout(()=>{setlikeAnimation(false)},1000)
+                if (!slideData[index].like) {
+                    setlikeAnimation(true);
+                    setTimeout(() => {
+                        setlikeAnimation(false);
+                    }, 1000);
                 }
                 // alle Slides aktuallisieren, sodass Veränderungen durch das Liken angezeigt werden.
                 const d0 = await getSlideDataBySlideIndex(0);
@@ -153,13 +155,10 @@ export default function Generate(props) {
                     <img
                         src={slideData[index].src}
                         className="swiper-lazy"
-                        //style={slideData[index].like ? { opacity: 0.7 } : { opacity: 1 }}
-                        style={
-                            {
-                                border: slideData[index].like ? "10px solid greenyellow": undefined,
-                                opacity: likeAnimation ? 0.7 : 1
-                            }
-                        }
+                        style={{
+                            border: slideData[index].like ? "10px solid greenyellow" : "",
+                            opacity: likeAnimation ? 0.7 : 1,
+                        }}
                         alt=""
                     ></img>
                 </div>
@@ -227,18 +226,26 @@ export default function Generate(props) {
         // Zurücksliden nur genau dann erlauben, wenn das derzeit angezeigte Bild nicht das aller erste ist
         if (actualIndex == 0) {
             ev.allowSlidePrev = false;
-            document.getElementsByClassName("swiper-button-prev")[0].classList.add("swiper-button-disabled");
+            try {
+                document.getElementsByClassName("swiper-button-prev")[0].classList.add("swiper-button-disabled");
+            } catch (error) {}
         } else {
             ev.allowSlidePrev = true;
-            document.getElementsByClassName("swiper-button-prev")[0].classList.remove("swiper-button-disabled");
+            try {
+                document.getElementsByClassName("swiper-button-prev")[0].classList.remove("swiper-button-disabled");
+            } catch (error) {}
         }
         // Weitersliden nur genau dann erlauben, wenn das derzeit angezeigte Bild schon fertig generiert ist (sonst müsste man sowieso erst darauf warten, bevor etwas angezeigt wird)
         if (slideData[ev.realIndex].generating) {
             ev.allowSlideNext = false;
-            document.getElementsByClassName("swiper-button-next")[0].classList.add("swiper-button-disabled");
+            try {
+                document.getElementsByClassName("swiper-button-next")[0].classList.add("swiper-button-disabled");
+            } catch (error) {}
         } else {
             ev.allowSlideNext = true;
-            document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
+            try {
+                document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
+            } catch (error) {}
         }
     };
     // Prüfen, ob das aktuelle Bild noch generiert wird und es, wenn ja, aktualisieren
@@ -252,7 +259,11 @@ export default function Generate(props) {
                 slideData[c] = d;
                 if (d.generating == false) {
                     swiperRef.allowSlideNext = true;
-                    document.getElementsByClassName("swiper-button-next")[0].classList.remove("swiper-button-disabled");
+                    try {
+                        document
+                            .getElementsByClassName("swiper-button-next")[0]
+                            .classList.remove("swiper-button-disabled");
+                    } catch (error) {}
                 }
                 setSwiperState();
             }
