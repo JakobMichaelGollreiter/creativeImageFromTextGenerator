@@ -19,6 +19,7 @@ const MyApp = () => {
         store: store,
         // App routes
         routes: routes,
+        autoDarkTheme: true,
     };
 
     return (

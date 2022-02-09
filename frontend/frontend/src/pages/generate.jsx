@@ -15,7 +15,7 @@ SwiperCore.use([Navigation, Mousewheel]);
 export default function Generate(props) {
     // interval setzen und sicherstellen, dass es auch wieder gelöscht wird
     useEffect(() => {
-        const timer = setInterval(refreshGenerating, 500);
+        const timer = setInterval(refreshGenerating, 250);
         return () => clearInterval(timer);
     });
 

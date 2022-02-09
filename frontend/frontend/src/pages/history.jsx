@@ -28,13 +28,11 @@ const HistoryPage = () => {
             <Navbar title="Suchverlauf" backLink="Zurück" />
             <PageContent>
                 <BlockTitle>Letzte Suchanfragen</BlockTitle>
-                <Block>
                     <List>
                         {hist.map((h, index) => (
                             <ListItem key={index} link={`/generator/${h.id}/`} title={h.search}></ListItem>
                         ))}
                     </List>
-                </Block>
             </PageContent>
         </Page>
     );
