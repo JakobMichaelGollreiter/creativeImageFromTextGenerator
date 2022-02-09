@@ -24,6 +24,11 @@ const AboutPage = () => (
                 </i>
             </p>
         </Block>
+        <Block strong>
+            <p>
+                Made with love by Jakob Gollreiter, Tobias Höpp, Bernhard Stöffler and August Wittgenstein
+            </p>
+        </Block>
     </Page>
 );
 
