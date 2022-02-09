@@ -10,9 +10,9 @@ const NotFoundPage = () => (
         </Block>
         <Block strong>
             <p>
-                Vielleicht hilft Ihnen dieser
+                Vielleicht hilft Ihnen dieser&nbsp;
                 <a onClick={() => window.open("https://youtu.be/dQw4w9WgXcQ", "_system", "location=yes")}>Link</a>
-                weiter.
+                &nbsp;weiter.
             </p>
         </Block>
     </Page>
