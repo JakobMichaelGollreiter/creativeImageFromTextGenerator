@@ -10,8 +10,8 @@ const ExplanationBlock = () => (
     </p>
     <p>
       Die Bilder werden dabei anhand deiner Präferenzen immer besser und
-      passender. Um deine Präferenzen mitzuteilen, halte auf einem Bild
-      gedrückt, um es zu liken. Alle gelikten Bilder kannst du dir später in
+      passender. Um deine Präferenzen mitzuteilen, doppelcklicke oder doppeltippe 
+      auf ein Bild, um es zu liken. Alle gelikten Bilder kannst du dir später in
       deiner Suchhistorie anschauen.
     </p>
   </Block>
