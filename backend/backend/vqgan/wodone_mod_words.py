@@ -1,5 +1,6 @@
-# this array contains the different mod_words used to go through the like algo after the search_promt 
-# the impact of them warries pretty much 
+# this array contains the different mod_words used to go through the like algo (Tree) after the search_promt 
+# the impact of the different discribing words warries pretty much 
+
 
 wodone_adjectives = [
 #colors
