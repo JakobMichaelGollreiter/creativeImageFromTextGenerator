@@ -1,7 +1,11 @@
+# this array contains the different mod_words used to go through the like algo after the search_promt 
+# the impact of them warries pretty much 
+
 wodone_adjectives = [
 #colors
     "red", "green", "blue", "yellow", "orange", "purple", "magenta", "cyan", "brown", "black", "white", "gold", "silver" #big impact
-    #"big", "small", "tiny", "huge", "giant",                   #don't work very well
+#sizes   
+    #"big", "small", "tiny", "huge", "giant", "enourmos",                  #don't work very well
 #themes
     #"skyrim", "witcher", "dishonored", "half life", "portal",  #work very well but beware infringement
     "cyberpunk", "steampunk",                                   #fantastic results
@@ -10,7 +14,7 @@ wodone_adjectives = [
     "medieval", "ancient", "prehistoric",                       #sometimes works
     "realistic",                                                #not actually realistic but still interesting
 #cultural stuff
-    "japan", "china", "asia",
+    "japan", "china", "asia", "italy",
     "mediterranian", "african", "south american",
     "nordic", "northern",                                       #good for landscapes, otherwise not much
 #emotions
@@ -24,5 +28,5 @@ wodone_adjectives = [
     "clean", "sterile", "pure", "heavenly",                     #little impact
     "burning", "fire", "smoking",                               #big impact
     "flooded", "water", "underwater", "sunken",                 #sometimes big impact
-    "floating", "flying" , "fly"
+    "floating", "flying" , "fly", "heavy"
 ]
