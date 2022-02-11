@@ -1,5 +1,5 @@
-wodone_adjectives = [
-    "red", "green", "blue", "yellow", "orange", "purple", "magenta", "cyan", "black", "white",
+ wodone_adjectives = [
+    "red", "green", "blue", "yellow", "orange", "purple", "magenta", "brown", "cyan", "black", "white", "silver" , "gold"
     "big", "small", "tiny", "huge", "giant",
     #"skyrim", "witcher", "dishonored", "half life", "portal",
     "cyberpunk", "steampunk", "utopian", "dystopian", "nordic", "futuristic", "medieval", "realistic",
