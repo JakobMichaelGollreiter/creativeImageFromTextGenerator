@@ -22,7 +22,7 @@ wodone_adjectives = [
     "horror", "bloody", "terrifying", "scary",                  #nice twist, "bloody" works very well
     "gloomy", "mysterious", "magical", "fantasy",               #medium/good results
     #"calming",                                                 #little impact
-    "warming", "cold", "snow" ,"desert",
+    "warming", "cold", "snow" ,"desert", "sunny",
     #"energetic", "technical", "electric", "scientific",        #little impact
     "overgrown", "natural", "underground",                      #overgrown works well, the rest, meh
     "broken", "ruined", "dirty", "destroyed", "abandoned",      #medium impact
