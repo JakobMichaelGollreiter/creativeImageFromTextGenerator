@@ -1,5 +1,18 @@
-# -*- coding: utf-8 -*-
-"""Create Realistic AI-Generated Images With VQGAN + CLIP"""
+############################################
+# WoDone
+# backend/backend/generate_image.py
+# Authors: Bernhard Stöffler, Jakob Gollreiter
+# 
+# takes a numerical ID as input, which is used to fetch 
+# the image in question from the database.
+#
+# images are generated using VQGAN + CLIP, source code for image generation taken from
+# https://colab.research.google.com/drive/1wkF67ThUz37T2_oPIuSwuO4e_-0vjaLs?usp=sharing#scrollTo=ZdlpRFL8UAlW
+# a Google Colab notebook by Max Woolf, however the original method was by Katherine Crowson.
+# 
+# the user text prompt is prepended by a concatenation of modificator adjectives from wodone_mod_words.py
+# this is to get more stylistically varied results, and to enable a like feature.
+############################################
 
 from pathlib import Path
 import sys
@@ -11,30 +24,25 @@ from models.generators import generators
 from models.images import images
 
 def generate_image(image_id):
-	########################## PARAMETERS FROM CMDLINE ARE PARSED HERE ##########################
 
-	globalimagedirpath = "/var/www/html/images"
-
-	#texts = generators.query.get(images.generator_id) #digga keine Ahnung
+	#fetch image attributes from database
 	current_image = images.query.get(image_id)
 	texts = current_image.generator.search
 
-	imgpathrel = str(image_id)
-
 	modifiers = current_image.seed
 	for wordindex in modifiers:
+		#prepend generation prompt with adjectives
 		texts = wodone_adjectives[int(wordindex)] + " " + texts
+		#save images in a tree structure (with numeric names, since os.system is called later)
 		imgpathrel = imgpathrel + "/" + str(wordindex)
-	print("currently generating: ", texts)
+
+	print("\ncurrently generating: ", texts, "\n")
+
+	#where the images will be saved
+	globalimagedirpath = "/var/www/html/images"
+	imgpathrel = str(image_id)
 	imgpath = globalimagedirpath + "/" + imgpathrel
 	imgpathdb = "/api/images/" + imgpathrel
-
-	if False:
-		print("texts: " + texts)
-		print("modifiers: ", modifiers)
-		print("imagepath relative: " + imgpathrel)
-		print("imagepath on disk: " + imgpath)
-		print("image filepath for database: " + imgpathdb + "/image.png")
 
 	#create directory and add unfinished flag
 	Path(imgpath + "/steps").mkdir(parents=True, exist_ok=True)
@@ -43,19 +51,19 @@ def generate_image(image_id):
 	# Fixed parameters
 	model_name = "vqgan_imagenet_f16_16384"
 	seed = 42
+	learning_rate = 0.2 
 
+	# width, height and max_steps are kept low to speed up generation
+	# could be bigger if our hardware was more powerful
 	width = 300 
 	height = 300 
-	learning_rate = 0.2 
 	max_steps = 100 
+	# note: from experience, image converges after ~100 iterations, more steps have little effect
 
+	#from here on, most of the generation code is simply copied from colab
 	try:
 		import argparse
 		import math
-
-		# vorher hats auch funktioniert?
-		#sys.path.insert(1, '/usr/local/bin/api/vqgan/taming-transformers')
-		#sys.path.insert(1, 'vqgan/taming-transformers')
 
 		from IPython import display
 		from base64 import b64encode
@@ -189,12 +197,6 @@ def generate_image(image_id):
 				self.cut_pow = cut_pow
 
 				self.augs = nn.Sequential(
-					# K.RandomHorizontalFlip(p=0.5),
-					# K.RandomVerticalFlip(p=0.5),
-					# K.RandomSolarize(0.01, 0.01, p=0.7),
-					# K.RandomSharpness(0.3,p=0.4),
-					# K.RandomResizedCrop(size=(self.cut_size,self.cut_size), scale=(0.1,1),  ratio=(0.75,1.333), cropping_mode='resample', p=0.5),
-					# K.RandomCrop(size=(self.cut_size,self.cut_size), p=0.5),
 					K.RandomAffine(degrees=15, translate=0.1, p=0.7, padding_mode='border'),
 					K.RandomPerspective(0.7,p=0.7),
 					K.ColorJitter(hue=0.1, saturation=0.1, p=0.7),
@@ -212,15 +214,6 @@ def generate_image(image_id):
 				cutouts = []
 				
 				for _ in range(self.cutn):
-
-					# size = int(torch.rand([])**self.cut_pow * (max_size - min_size) + min_size)
-					# offsetx = torch.randint(0, sideX - size + 1, ())
-					# offsety = torch.randint(0, sideY - size + 1, ())
-					# cutout = input[:, :, offsety:offsety + size, offsetx:offsetx + size]
-					# cutouts.append(resample(cutout, (self.cut_size, self.cut_size)))
-
-					# cutout = transforms.Resize(size=(self.cut_size, self.cut_size))(input)
-					
 					cutout = (self.av_pool(input) + self.max_pool(input))/2
 					cutouts.append(cutout)
 				batch = self.augs(torch.cat(cutouts, dim=0))
@@ -257,8 +250,7 @@ def generate_image(image_id):
 			size = round((area * ratio)**0.5), round((area / ratio)**0.5)
 			return image.resize(size, Image.LANCZOS)
 
-		####################### parse parameters ################################
-
+		#input parameters are now combined in a dictionary, for easy referencing in functions
 		gen_config = {
 			"texts": texts,
 			"width": width,
@@ -288,10 +280,6 @@ def generate_image(image_id):
 		model_target_images = []
 		model_texts = [phrase.strip() for phrase in texts.split("|")]
 
-		###add dictionary words from cmdargs as multiple prompts
-		#for wordindex in sys.argv[2::]:
-			#model_texts.append(wodone_words[int(wordindex)])
-
 		if model_texts == ['']:
 			model_texts = []
 
@@ -313,7 +301,9 @@ def generate_image(image_id):
 		)
 		from urllib.request import urlopen
 
+		#note: please, for gods sake, use a GPU, cpu generation times are soooo slow
 		device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+		#TODO maybe remove these prints and if statements, since most parameters have been hardcoded
 		print('Using device:', device)
 		if model_texts:
 			print('Using texts:', model_texts)
@@ -328,10 +318,6 @@ def generate_image(image_id):
 
 		model = load_vqgan_model(args.vqgan_config, args.vqgan_checkpoint).to(device)
 		perceptor = clip.load(args.clip_model, jit=False)[0].eval().requires_grad_(False).to(device)
-		# clock=deepcopy(perceptor.visual.positional_embedding.data)
-		# perceptor.visual.positional_embedding.data = clock/clock.max()
-		# perceptor.visual.positional_embedding.data=clamp_with_grad(clock,0,1)
-
 		cut_size = perceptor.visual.input_resolution
 
 		f = 2**(model.decoder.num_resolutions - 1)
@@ -350,12 +336,8 @@ def generate_image(image_id):
 			n_toks = model.quantize.n_e
 			z_min = model.quantize.embedding.weight.min(dim=0).values[None, :, None, None]
 			z_max = model.quantize.embedding.weight.max(dim=0).values[None, :, None, None]
-		# z_min = model.quantize.embedding.weight.min(dim=0).values[None, :, None, None]
-		# z_max = model.quantize.embedding.weight.max(dim=0).values[None, :, None, None]
 
-		# normalize_imagenet = transforms.Normalize(mean=[0.485, 0.456, 0.406],
-		#                                            std=[0.229, 0.224, 0.225])
-
+		#TODO maybe remove unneccesary if statements
 		if args.init_image:
 			if 'http' in args.init_image:
 				img = Image.open(urlopen(args.init_image))
@@ -369,7 +351,6 @@ def generate_image(image_id):
 			z, *_ = model.encode(pil_tensor.to(device).unsqueeze(0) * 2 - 1)
 		else:
 			one_hot = F.one_hot(torch.randint(n_toks, [toksY * toksX], device=device), n_toks).float()
-			# z = one_hot @ model.quantize.embedding.weight
 			if args.vqgan_checkpoint == 'vqgan_openimages_f16_8192.ckpt':
 				z = one_hot @ model.quantize.embed.weight
 			else:
@@ -412,6 +393,7 @@ def generate_image(image_id):
 				z_q = vector_quantize(z.movedim(1, 3), model.quantize.embedding.weight).movedim(3, 1)
 			return clamp_with_grad(model.decode(z_q).add(1).div(2), 0, 1)
 
+		#theoretically obsolete check-in function, but left in because I don't understand decorators and don't want to break anything
 		@torch.no_grad()
 		def checkin(i, losses):
 			losses_str = ', '.join(f'{loss.item():g}' for loss in losses)
@@ -421,26 +403,22 @@ def generate_image(image_id):
 			display.display(display.Image('progress.png'))
 
 		def ascend_txt():
-			# global i
 			out = synth(z)
 			iii = perceptor.encode_image(normalize(make_cutouts(out))).float()
 			
 			result = []
 
 			if args.init_weight:
-				# result.append(F.mse_loss(z, z_orig) * args.init_weight / 2)
 				result.append(F.mse_loss(z, torch.zeros_like(z_orig)) * ((1/torch.tensor(i*2 + 1))*args.init_weight) / 2)
 			for prompt in pMs:
 				result.append(prompt(iii))
 			img = np.array(out.mul(255).clamp(0, 255)[0].cpu().detach().numpy().astype(np.uint8))[:,:,:]
 			img = np.transpose(img, (1, 2, 0))
 			img = Image.fromarray(img)
-			# imageio.imwrite(f'./steps/{i:03d}.png', np.array(img))
-
-			#img.save(f"./steps/{i:03d}.png", pnginfo=metadata)
 			
+			#save the current iteration in /steps
 			img.save(imgpath + f"/steps/{i:03d}.png", pnginfo=metadata) 
-			#update database
+			#update database path to current step (to have a live preview)
 			current_image.path = imgpathdb + f"/steps/{i:03d}.png"
 			db.session.commit()
 			return result
@@ -449,10 +427,10 @@ def generate_image(image_id):
 			opt.zero_grad()
 			lossAll = ascend_txt()
 
-			#save image on every step (maybe comment out?)
+			#saves image on every step
 			out = synth(z)
 			TF.to_pil_image(out[0].cpu()).save(imgpath + "/image.png", pnginfo=metadata)
-			
+
 			loss = sum(lossAll)
 			loss.backward()
 			opt.step()
@@ -461,6 +439,7 @@ def generate_image(image_id):
 				z.copy_(z.maximum(z_min).minimum(z_max))
 
 		########## "main" ##########################################
+		#image is effectively generated in this loop
 
 		try:
 			for i in range(max_steps):
@@ -468,22 +447,23 @@ def generate_image(image_id):
 				if not i%20:
 					print("prompt: " + texts + f", iteration {i:03d}")
 					sys.stdout.flush()
-			# save final image to progress.png
-			#checkin(max_steps, ascend_txt()) 
 		except KeyboardInterrupt:
 			pass
 
-		#set database entry to be finished
+		#set database entry to be finished and update path with final result
 		current_image.generated = True
 		current_image.path = imgpathdb + "/image.png"
 		db.session.commit()
-		#remove flags
+		#remove unfinished flag
 		os.system("rm " + imgpath + "/unfinished")
-		#os.system("rm rendering")
 		#remove generator steps (save disk space)
 		os.system("rm -r " + imgpath + "/steps")
 
 	except:
+		#### if anything happens during generation process, we end up here.
+		#### fortunately, our daemon will just restart and try again, so pretend nothing happened
+		# prevent database from being semi corrupted hopefully
 		db.session.rollback()
-		print("Error while generating")
+		print("\nERROR while generating\n")
+		# leave no evidence of our failure
 		os.system("rm -rf " + imgpath)
