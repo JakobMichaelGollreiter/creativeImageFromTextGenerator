@@ -24,7 +24,7 @@ while True:
 
 	#if database query returned an image, we have some generating to do
 	if img:
-		print("\ngenerating new image\n\n")
+		print("found new image")
 		workplaceinjuries = 0
 		try:
 			generate_image(img.id)
@@ -34,8 +34,8 @@ while True:
 	else:
 		sleep(0.1)
 		workplaceinjuries+=1
-		if not workplaceinjuries%500:
-			print("seconds without an image to render: ", workplaceinjuries/10)
+		if not workplaceinjuries%600:
+			print("minutes without an image to render: ", workplaceinjuries/600)
 			sys.stdout.flush()
 
 	#end the database session so the next image query opens a new session with latest entries

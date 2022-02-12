@@ -33,14 +33,15 @@ def generate_image(image_id):
 	for wordindex in modifiers:
 		#prepend generation prompt with adjectives
 		texts = wodone_adjectives[int(wordindex)] + " " + texts
-		#save images in a tree structure (with numeric names, since os.system is called later)
-		imgpathrel = imgpathrel + "/" + str(wordindex)
 
-	print("\ncurrently generating: ", texts, "\n")
+	print("now generating: ", texts, "\n")
 
 	#where the images will be saved
 	globalimagedirpath = "/var/www/html/images"
 	imgpathrel = str(image_id)
+	for wordindex in modifiers:
+		#save images in a tree structure (with numeric names, since os.system is called later)
+		imgpathrel = imgpathrel + "/" + str(wordindex)
 	imgpath = globalimagedirpath + "/" + imgpathrel
 	imgpathdb = "/api/images/" + imgpathrel
 
@@ -303,18 +304,8 @@ def generate_image(image_id):
 
 		#note: please, for gods sake, use a GPU, cpu generation times are soooo slow
 		device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-		#TODO maybe remove these prints and if statements, since most parameters have been hardcoded
-		print('Using device:', device)
-		if model_texts:
-			print('Using texts:', model_texts)
-		if model_target_images:
-			print('Using image prompts:', model_target_images)
-		if args.seed is None:
-			seed = torch.seed()
-		else:
-			seed = args.seed
+		seed = args.seed
 		torch.manual_seed(seed)
-		print('Using seed:', seed)
 
 		model = load_vqgan_model(args.vqgan_config, args.vqgan_checkpoint).to(device)
 		perceptor = clip.load(args.clip_model, jit=False)[0].eval().requires_grad_(False).to(device)
@@ -337,26 +328,13 @@ def generate_image(image_id):
 			z_min = model.quantize.embedding.weight.min(dim=0).values[None, :, None, None]
 			z_max = model.quantize.embedding.weight.max(dim=0).values[None, :, None, None]
 
-		#TODO maybe remove unneccesary if statements
-		if args.init_image:
-			if 'http' in args.init_image:
-				img = Image.open(urlopen(args.init_image))
-			else:
-				img = Image.open(args.init_image)
-			pil_image = img.convert('RGB')
-			if pil_image.size != (width, height):
-				print(f"Resizing source image to {width}x{height}")
-				pil_image = pil_image.resize((sideX, sideY), Image.LANCZOS)
-			pil_tensor = TF.to_tensor(pil_image)
-			z, *_ = model.encode(pil_tensor.to(device).unsqueeze(0) * 2 - 1)
+		one_hot = F.one_hot(torch.randint(n_toks, [toksY * toksX], device=device), n_toks).float()
+		if args.vqgan_checkpoint == 'vqgan_openimages_f16_8192.ckpt':
+			z = one_hot @ model.quantize.embed.weight
 		else:
-			one_hot = F.one_hot(torch.randint(n_toks, [toksY * toksX], device=device), n_toks).float()
-			if args.vqgan_checkpoint == 'vqgan_openimages_f16_8192.ckpt':
-				z = one_hot @ model.quantize.embed.weight
-			else:
-				z = one_hot @ model.quantize.embedding.weight
-			z = z.view([-1, toksY, toksX, e_dim]).permute(0, 3, 1, 2) 
-			z = torch.rand_like(z)*2
+			z = one_hot @ model.quantize.embedding.weight
+		z = z.view([-1, toksY, toksX, e_dim]).permute(0, 3, 1, 2) 
+		z = torch.rand_like(z)*2
 		z_orig = z.clone()
 		z.requires_grad_(True)
 		opt = optim.Adam([z], lr=args.step_size)
@@ -392,15 +370,6 @@ def generate_image(image_id):
 			else:
 				z_q = vector_quantize(z.movedim(1, 3), model.quantize.embedding.weight).movedim(3, 1)
 			return clamp_with_grad(model.decode(z_q).add(1).div(2), 0, 1)
-
-		#theoretically obsolete check-in function, but left in because I don't understand decorators and don't want to break anything
-		@torch.no_grad()
-		def checkin(i, losses):
-			losses_str = ', '.join(f'{loss.item():g}' for loss in losses)
-			tqdm.write(f'i: {i}, loss: {sum(losses).item():g}, losses: {losses_str}')
-			out = synth(z)
-			TF.to_pil_image(out[0].cpu()).save('progress.png', pnginfo=metadata)
-			display.display(display.Image('progress.png'))
 
 		def ascend_txt():
 			out = synth(z)
@@ -445,7 +414,7 @@ def generate_image(image_id):
 			for i in range(max_steps):
 				train(i)
 				if not i%20:
-					print("prompt: " + texts + f", iteration {i:03d}")
+					print("    prompt: " + texts + f", iteration {i:03d}")
 					sys.stdout.flush()
 		except KeyboardInterrupt:
 			pass
@@ -458,6 +427,8 @@ def generate_image(image_id):
 		os.system("rm " + imgpath + "/unfinished")
 		#remove generator steps (save disk space)
 		os.system("rm -r " + imgpath + "/steps")
+		print("done generating!\n")
+		sys.stdout.flush()
 
 	except:
 		#### if anything happens during generation process, we end up here.
