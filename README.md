@@ -10,6 +10,16 @@ and
 cuda drivers of some sort (depends on your host system)
 to get started use--> docker-compose up -d
 
+<!-- Use -->
+## Use
+
+The Userinterface is pretty minimalistic and straightforward. 
+At (1) the user inputs a deliberate number of search terms, which he wants the output theme to focus on. These could literally include any words. Popular examples are landscapes (e.g. "castle", "mountain", "space"), themes (e.g. "medieval", "bloody", "apocalyptic") or characters (e.g. "trolls", "hound"), as well as going as far as simply entering colors.
+
+Past searches and their output can be viewed in the search history (2), which also stores already generated images as well as the users reaction to them indicating a "like" with a yellow frame. The history page works just as the main image generation page. The user can still like the images, although these changes will only be visible at the end of the already generated output queue. If this is reached the site will go on generating images depending on the past output just as the main search site does.
+
+(3) and (4) are self explanatory while the settings have not been completed yet. (we by the way encourage to click the link at the bottom of any 404 error page)
+
 
 <!-- backend readme -->
 ## backend readme
