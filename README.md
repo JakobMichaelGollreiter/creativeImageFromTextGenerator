@@ -1,8 +1,10 @@
 # g5-21
 
-Requirements:
+**Requirements and Installation:**
 
-docker-compose v1.28.0+
+Our project is divident into several microservices. Therefore one can use docker compose for the buildup. Because we need to get information about the hardware that is used, we need at least   docker-compose v1.28.0+
+
+and 
 cuda drivers of some sort (depends on your host system)
 to get started use--> docker-compose up -d
 
