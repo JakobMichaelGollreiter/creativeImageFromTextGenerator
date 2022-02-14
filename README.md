@@ -49,7 +49,7 @@ The further down, the more specific and rich the generated images become.
 <!-- CONTACT -->
 ## Contact
 
-August Prinz zu Sayn-Wittgenstein-Berleburg - - @tum.de
+August Wittgenstein - - august.wittgenstein@tum.de
 
 Bernhard Stöffler - - bernhard.stöffler@tum.de
 
