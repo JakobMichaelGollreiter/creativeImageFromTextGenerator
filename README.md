@@ -21,10 +21,21 @@ The generative capabilities of this network are extremely impressive. The intera
 
 **How does the like-algorithm work?**
 
-In order for the user to have a direct impact of the image generation we wanted to have some user feedback. Therefore we use a simple like/dislike functionality, to more accurately depict the users fantasy.
-To implement this, we came up with a simple way to influence the image generation without actually touching the neural networks code. Our AI is able to generate images from text, so instead of manipulating the image, we just modify the input text.
+In order for the user to have a direct impact on the image generation, some form of feedback was required. 
+By implementing a like algorithm, we wanted to substanciate the users idea.
+If the user is given a rich pallete of styles to choose from, the fantasy world in the users mind becomes more fleshed out and concrete, even without a specific idea in mind beforehand.
 
-The like algorithm can be visualized with a tree structure. On every generation, new adjectives are added to the search prompt, and the one liked by the user is kept. This way, the image becomes more and more rich of features.
+For every image generated, an adjective from a set of hand-curated modificator words is added to the users search prompt.
+These words have a strong stilistic impact and push the images overall appearance in a certain direction, without needing to modify the AIs code.
+
+One benefit to this method is, that the images become more diverse. This way, the user gets more inspiration from our results.
+Even if the users story isn't in any way fleshed out, our images can propose a general tone or setting for the user to choose.
+
+Our like algorithm expands on this functionality. When the user likes an image by double tapping, the modificator word is permanently added to the search prompt. Hence, the direction the user has chosen is kept, but further explored with more modificator words.
+
+The overall method can be visualized with a tree structure. Every branch is a different stylistic direction, and when the user likes an image, the tree is expanded from this branch on downwards.
+The further down, the more specific and rich the generated images become.
+
 ![like-algo](/uploads/1f1d4625e32e172cddd64b644b3da527/like-algo.png)
 
 
