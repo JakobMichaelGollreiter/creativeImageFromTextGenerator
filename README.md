@@ -36,6 +36,6 @@ Our like algorithm expands on this functionality. When the user likes an image b
 The overall method can be visualized with a tree structure. Every branch is a different stylistic direction, and when the user likes an image, the tree is expanded from this branch on downwards.
 The further down, the more specific and rich the generated images become.
 
-![like-algo](/uploads/1f1d4625e32e172cddd64b644b3da527/like-algo.png)
+<img src="/uploads/1f1d4625e32e172cddd64b644b3da527/like-algo.png"  width="666" height="535">
 
 
