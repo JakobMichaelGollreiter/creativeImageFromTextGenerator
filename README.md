@@ -1,6 +1,8 @@
 # g5-21
 
-**Requirements and Installation:**
+
+<!-- Requirements and Installation: -->
+## Requirements and Installation:
 
 Our project is divident into several microservices. Therefore one can use docker compose for the buildup. Because we need to get information about the hardware that is used, we need at least   docker-compose v1.28.0+
 
@@ -9,9 +11,12 @@ cuda drivers of some sort (depends on your host system)
 to get started use--> docker-compose up -d
 
 
-**backend readme:**
+<!-- backend readme -->
+## backend readme
 
-**Which neural net are we using for the image generation?**
+<!-- Which neural net are we using for the image generation? -->
+### Which neural net are we using for the image generation?
+
 
 
 For the actual image generation we use an already pre-trained network using VQGAN + CLIP, source code for image generation taken from
@@ -21,7 +26,8 @@ This is a Google Colab notebook by Max Woolf, however the original method was by
 The generative capabilities of this network are extremely impressive. The interaction of the two nets essentially consists of VQGAN generating the images, while CLIP judges how well an image matches our text input.
 
 
-**How does the like-algorithm work?**
+<!-- How does the like-algorithm work? -->
+### How does the like-algorithm work?
 
 In order for the user to have a direct impact on the image generation, some form of feedback was required. 
 By implementing a like algorithm, we wanted to substanciate the users idea.
@@ -39,5 +45,24 @@ The overall method can be visualized with a tree structure. Every branch is a di
 The further down, the more specific and rich the generated images become.
 
 <img src="/uploads/1f1d4625e32e172cddd64b644b3da527/like-algo.png"  width="666" height="535">
+
+<!-- CONTACT -->
+## Contact
+
+August Prinz zu Sayn-Wittgenstein-Berleburg - - @tum.de
+
+Bernhard Stöffler - - bernhard.stöffler@tum.de
+
+Tobias Höpp - - tobias.hoepp@tum.de
+
+Jakob Gollreiter -  - jakob.gollreiter@tum.de
+
+
+
+
+Project Link: [https://gitlab.ldv.ei.tum.de/komcrea/g5-21](https://gitlab.ldv.ei.tum.de/komcrea/g5-21)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 
 
