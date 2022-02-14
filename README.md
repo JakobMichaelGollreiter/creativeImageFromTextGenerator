@@ -20,6 +20,7 @@ The generative capabilities of this network are extremely impressive. The intera
 
 
 **How does the like-algorithm work?**
+
 In order for the user to have a direct impact of the image generation we wanted to have some user feedback. Therefore we use a simple like/dislike functionality, to more accurately depict the users fantasy.
 To implement this, we came up with a simple way to influence the image generation without actually touching the neural networks code. Our AI is able to generate images from text, so instead of manipulating the image, we just modify the input text.
-![alt text](https://github.com/[ge82zil]/[g5-21]/blob/[readme]/image.jpg?raw=true)
+![like-algo](/uploads/1f1d4625e32e172cddd64b644b3da527/like-algo.png)
