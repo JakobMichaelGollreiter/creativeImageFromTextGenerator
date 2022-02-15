@@ -2,7 +2,7 @@
 
 <img src="./pictures/logo_big.png" alt="WoDone-Logo" width="200"/>
 
-**AI-Based generation of exciting concept art and images by the power of your own words.**
+### AI-Based generation of exciting concept art and images by the power of your own words.
 
 <img src="./pictures/bild1.png" alt="WoDone-bild1" width="850"/>
 <img src="./pictures/bild2.png" alt="WoDone-bild2" width="850"/>
@@ -43,7 +43,7 @@ Past searches and their output can be viewed in the search history, just below t
 
 The About and Settings pages are self explanatory while the settings have not been completed yet, as thus far they were not necessary for the image generation to work properly. (we by the way encourage to click the link at the bottom of any 404 error page)
 
-<img src="./pictures/WoDone_Landing_Page.png" alt="WoDone-Landing Page" width="920"/>
+<img src="./pictures/WoDone_Landing_Page.png" alt="WoDone-Landing Page" width="1000"/>
 
 ### Image Generation
 
@@ -57,6 +57,9 @@ Images are portrayed on Slides. The user can navigate to the next image on the r
 #### Likes
 
 Users can like images by double-clicking on them. This triggers an animation at the respective image. Later a "like" is shown by a yellow frame around the liked image. With each like the application receives feedback about the users preferences and can therefore customize the generated concept art further and further with every iteration towards the ideal image.
+
+<img src="./pictures/WoDone_Loading_Animation.png" alt="WoDone-Logo" width="250"/> 
+<img src="./pictures/WoDone_example_Image.png" alt="WoDone-Logo" width="250"/> 
 
 ## Using the API
 
