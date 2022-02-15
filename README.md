@@ -56,6 +56,9 @@ Images are portrayed on Slides. The user can navigate to the next image on the r
 
 Users can like images by double-clicking on them. This triggers an animation at the respective image. Later a "like" is shown by a yellow frame around the liked image. With each like the application receives feedback about the users preferences and can therefore customize the generated concept art further and further with every iteration towards the ideal image.
 
+<img src="./pictures/WoDone_Loading_Animation.png" alt="WoDone-Logo" width="250"/> 
+<img src="./pictures/WoDone_example_Image.png" alt="WoDone-Logo" width="250"/> 
+
 ## Using the API
 
 The WoDone API is documented in the `./swagger.yaml`. It should be pretty self explainatory how to use it.
