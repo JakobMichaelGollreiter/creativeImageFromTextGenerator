@@ -35,7 +35,7 @@ Past searches and their output can be viewed in the search history, just below t
 
 The About and Settings pages are self explanatory while the settings have not been completed yet, as thus far they were not necessary for the image generation to work properly. (we by the way encourage to click the link at the bottom of any 404 error page)
 
-<img src="/pictures/WoDone_Landing_Page.png" alt="WoDone-Landing Page" width="920"/>
+<img src="./pictures/WoDone_Landing_Page.png" alt="WoDone-Landing Page" width="920"/>
 
 ### Image Generation
 
@@ -60,13 +60,19 @@ The WoDone API is documented in the `./swagger.yaml`. It should be pretty self e
 
 <!-- Which neural net are we using for the image generation? -->
 
-## Which neural net are we using for the image generation?
+## How does the image generation work?
 
 For the actual image generation we use an already pre-trained network using VQGAN + CLIP, source code for image generation taken from
 https://colab.research.google.com/drive/1wkF67ThUz37T2_oPIuSwuO4e_-0vjaLs?usp=sharing#scrollTo=ZdlpRFL8UAlW (licensed under MIT license).
 This is a Google Colab notebook by Max Woolf, however the original method was by Katherine Crowson.
 
 The generative capabilities of this network are extremely impressive. The interaction of the two nets essentially consists of VQGAN generating the images, while CLIP judges how well an image matches our text input.
+
+The Docker-container `wodone_vqgan` frequently checks the WoDone database for ungenerated images. If such are found it instructs the neural network to sequentially generate these images.
+
+New entries of ungenerated Images are added to the database whenever a new image is requested by the user (e.g. when swiping to the next image the second next image is being requested). The process is depicted in the sequence Diagram found in `./pictures/imageRequest.png`.
+
+<img src="./pictures/imageRequest.png" alt="WoDone-Logo" width="200"/>
 
 <!-- How does the like-algorithm work? -->
 
@@ -87,8 +93,7 @@ Our like algorithm expands on this functionality. When the user likes an image b
 The overall method can be visualized with a tree structure. Every branch is a different stylistic direction, and when the user likes an image, the tree is expanded from this branch on downwards.
 The further down, the more specific and rich the generated images become.
 
-<img src="/pictures/Baumstruktur.png"  width="666" height="535">
-
+<img src="./pictures/Baumstruktur.png"  width="666" height="535">
 
 All search prompts and all information about the images generated thereby (such as the modifiers and wether the image was liked or not) are stored in a database. It's entity relationship diagram is depicted in the file `./erd_from_db.pdf`.
 
