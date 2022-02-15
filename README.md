@@ -2,7 +2,7 @@
 
 <img src="./pictures/logo_big.png" alt="WoDone-Logo" width="200"/>
 
-**AI-Based generation of exciting concept art and images by the power of your own words.**
+### AI-Based generation of exciting concept art and images by the power of your own words.
 
 <img src="./pictures/bild1.png" alt="WoDone-bild1" width="850"/>
 <img src="./pictures/bild2.png" alt="WoDone-bild2" width="850"/>
