@@ -95,10 +95,7 @@ Some usefull imformation for contributing to WoDone can be found in the `./Devel
 
 # Contact us
 
--   August Wittgenstein - - august.wittgenstein@tum.de
-
--   Bernhard Stöffler - - bernhard.stoeffler@tum.de
-
--   Tobias Höpp - - tobias.hoepp@tum.de
-
 -   Jakob Gollreiter - - jakob.gollreiter@tum.de
+-   Tobias Höpp - - tobias.hoepp@tum.de
+-   Bernhard Stöffler - - bernhard.stoeffler@tum.de
+-   August Wittgenstein - - august.wittgenstein@tum.de
