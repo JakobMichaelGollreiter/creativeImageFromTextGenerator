@@ -41,7 +41,7 @@ Past searches and their output can be viewed in the search history, just below t
 
 The About and Settings pages are self explanatory while the settings have not been completed yet, as thus far they were not necessary for the image generation to work properly. (we by the way encourage to click the link at the bottom of any 404 error page)
 
-<img src="./pictures/WoDone_Landing_Page.png" alt="WoDone-Landing Page" width="920"/>
+<img src="./pictures/WoDone_Landing_Page.png" alt="WoDone-Landing Page" width="1000"/>
 
 ### Image Generation
 
