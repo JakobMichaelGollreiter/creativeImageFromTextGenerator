@@ -1,0 +1,36 @@
+#Open me with https://sequencediagram.org
+title WoDone Ablaufdiagramm: Bildabfrage
+
+actor webbrowser
+participant wodone_frontend
+participant wodone_backend
+database database
+database image_storage
+
+webbrowser->wodone_frontend:Anfrage Bild X
+wodone_frontend->wodone_backend:Anfrage Bild X
+wodone_backend->database:Frage nach Bild X
+alt #2f2e7b #white Datenbank-Eintrag existiert
+abox right of database:Bildinformation
+database->wodone_backend:Bildinformation
+else Datenbank-Eintrag existiert nicht
+abox right of database:Bildinformationen anderer Bilder\ndes Generators
+wodone_backend<-database:Fehler
+wodone_backend->database:Frage nach Informationen von\nallen gelikten Bildern\ndes Generators
+wodone_backend<-database:Bildinformationen aller \ngelikten Bilder des\nGenerators
+abox left of wodone_backend:random seed
+box over wodone_backend:Seed für neues Bild\nberechnen
+abox right of wodone_backend:Bildinformationen
+wodone_backend->database:neues Bild erstellen
+end 
+wodone_frontend<-wodone_backend:Bildinformationen
+webbrowser<-wodone_frontend:Bildinformationen
+
+abox right of image_storage:Bild-Datei
+webbrowser->wodone_frontend:Anfrage Bild-Datei
+wodone_frontend->wodone_backend:Anfrage Bild-Datei
+wodone_backend->image_storage:Bild-Datei lesen
+wodone_backend<-image_storage:Bild-Datei
+wodone_frontend<-wodone_backend:Bild-Datei
+webbrowser<-wodone_frontend:Bild-Datei
+abox right of webbrowser:Bild-Datei
