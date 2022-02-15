@@ -20,9 +20,9 @@ We do highly recommend at least a Nvidia RTX 2060 (desktop) GPU to use WoDone.
 
 To start the containers run `docker-compose up -d`
 
-**IMPORTANT:** There are Mysql-default-passwords set in the `./environment.env` file. If you plan to run WoDone anywhere you MUST CHANGE THESE PASSWORDS!!! As the Database is not accessable from outside it's own Docker network this should be reasonably safe though - but bad practise.
+**IMPORTANT:** There are Mysql-default-passwords set in the `./environment.env` file. If you plan to run WoDone anywhere **YOU MUST CHANGE THESE PASSWORDS!!!** As the database is not accessible from outside it's own Docker network this should be reasonably safe though - but bad practice.
 
-_Note: WoDone is currently only compatible with cuda-caplable Nvidia-GPUs. You can modify the docker-compose.yml in order to use CPU compute but this will slow down image generation drasticly, taking as much as an hour or more per image._
+_Note: WoDone is currently only compatible with cuda-capable Nvidia-GPUs. You can modify the docker-compose.yml in order to use CPU compute but this will slow down image generation drastically, taking as much as an hour or more per image._
 
 <!-- Use -->
 
@@ -30,7 +30,7 @@ _Note: WoDone is currently only compatible with cuda-caplable Nvidia-GPUs. You c
 
 # Using WoDone
 
-After running `docker-compose up -d` WoDone will start on port `8080` on your machine. To use WoDone, connect to `http://ip.adress.of.your.machine:8080` in your webbrowser to view the GUI.
+After running `docker-compose up -d` WoDone will start on port `8080` on your machine. To use WoDone, connect to `http://{ip.address.of.your.machine}:8080` in your webbrowser to view the GUI.
 
 You can also integrate WoDone into your application by using the WoDone API.
 
@@ -59,7 +59,7 @@ Images are portrayed on Slides. The user can navigate to the next image on the r
 Users can like images by double-clicking on them. This triggers an animation at the respective image. Later a "like" is shown by a yellow frame around the liked image. With each like the application receives feedback about the users preferences and can therefore customize the generated concept art further and further with every iteration towards the ideal image.
 
 <img src="./pictures/WoDone_Loading_Animation.png" alt="WoDone-Logo" width="250"/> 
-<img src="./pictures/WoDone_example_Image.png" alt="WoDone-Logo" width="250"/> 
+<img src="./pictures/WoDone_example_Image.png" alt="WoDone-Logo" width="250"/>
 
 ## Using the API
 
