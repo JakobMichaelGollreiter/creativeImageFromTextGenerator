@@ -20,6 +20,8 @@ We do highly recommend at least a Nvidia RTX 2060 (desktop) GPU to use WoDone.
 
 To start the containers run `docker-compose up -d`
 
+**IMPORTANT:** There are Mysql-default-passwords set in the `./environment.env` file. If you plan to run WoDone anywhere you MUST CHANGE THESE PASSWORDS!!! As the Database is not accessable from outside it's own Docker network this should be reasonably safe though - but bad practise.
+
 _Note: WoDone is currently only compatible with cuda-caplable Nvidia-GPUs. You can modify the docker-compose.yml in order to use CPU compute but this will slow down image generation drasticly, taking as much as an hour or more per image._
 
 <!-- Use -->
