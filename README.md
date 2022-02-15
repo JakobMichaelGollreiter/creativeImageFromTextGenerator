@@ -113,7 +113,7 @@ All search prompts and all information about the images generated thereby (such 
 
 # Contributing
 
-Some usefull imformation for contributing to WoDone can be found in the `./Developers.md`.
+Some useful information for contributing to WoDone can be found in the `./Developers.md`.
 
 <!-- CONTACT -->
 
