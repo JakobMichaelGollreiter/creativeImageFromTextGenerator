@@ -12,9 +12,9 @@
 
 # Requirements and Installation:
 
-WoDone is divident into several microservices. Therefore one can use docker compose for the buildup. Because WoDone needs to access your GPU, we need at least **docker-compose v1.28.0+**
+WoDone is divided into several microservices. Therefore, docker-compose is used to build the application. Because WoDone needs to access your GPU, you need at least **docker-compose v1.28.0+**
 and
-**cuda drivers** of some sort (depends on your host system).
+**cuda drivers** of some sort (depending on your host system).
 
 We do highly recommend at least a Nvidia RTX 2060 (desktop) GPU to use WoDone.
 
@@ -22,7 +22,7 @@ To start the containers run `docker-compose up -d`
 
 **IMPORTANT:** There are Mysql-default-passwords set in the `./environment.env` file. If you plan to run WoDone anywhere **YOU MUST CHANGE THESE PASSWORDS!!!** As the database is not accessible from outside it's own Docker network this should be reasonably safe though - but bad practice.
 
-_Note: WoDone is currently only compatible with cuda-capable Nvidia-GPUs. You can modify the docker-compose.yml in order to use CPU compute but this will slow down image generation drastically, taking as much as an hour or more per image._
+_Note: WoDone is currently only compatible with cuda-capable Nvidia-GPUs. You can modify the docker-compose.yml in order to use CPU computation, but this will slow down image generation drastically, taking as much as an hour or more per image._
 
 <!-- Use -->
 
@@ -36,27 +36,27 @@ You can also integrate WoDone into your application by using the WoDone API.
 
 ## Using the GUI
 
-The userinterface is pretty minimalistic and straightforward.
-In the center search field the user inputs a deliberate number of search terms, which he wants the output theme to focus on. These could literally include any words. Popular examples are landscapes (e.g. "castle", "mountain", "space"), themes (e.g. "medieval", "bloody", "apocalyptic") or characters (e.g. "trolls", "hound"), as well as going as far as simply entering colors. By clicking on the button below the searchbar ("Bilder generieren") the user will be forwarded to the image generation page.
+The user interface is pretty minimalistic and straight forward.
+In the center search field the user inputs a deliberate number of search terms, which he wants the output image to focus on. These could literally include any words (english is recommended however ;) ). Popular examples are landscapes (e.g. "castle", "mountain", "space"), themes (e.g. "medieval", "bloody", "apocalyptic") or characters (e.g. "trolls", "hound"), but you could go as far as simply entering colors. By clicking the button below the searchbar ("Bilder generieren"), the user will be forwarded to the image generation page.
 
-Past searches and their output can be viewed in the search history, just below the searchbar, which also stores already generated images as well as the users reaction to them indicating a "like" with a yellow frame. The history page works just as the main image generation page. The user can still like the images, although these changes will only be visible at the end of the already generated output queue. If this is reached the site will go on generating images depending on the past output just as the main search site does.
+Past searches and their output can be viewed in the search history, just below the searchbar. This also stores already generated images, as well as the users reaction to them indicating a "like" with a yellow frame. The user can still like the images, although these changes will only be visible at the end of the already generated output queue. If the end is reached, the site will go on generating images, depending on the past output, just like the main search site does.
 
-The About and Settings pages are self explanatory while the settings have not been completed yet, as thus far they were not necessary for the image generation to work properly. (we by the way encourage to click the link at the bottom of any 404 error page)
+The About and Settings pages are self explanatory. The settings have not been completed yet, as - thus far - they were not necessary for the image generation to work properly. (we encourage to click the link at the bottom of any 404 error page by the way ;) )
 
 <img src="./pictures/WoDone_Landing_Page.png" alt="WoDone-Landing Page" width="1000"/>
 
 ### Image Generation
 
-After entering custom search terms and clicking "Bilder generieren" the user will be forwarded to the image generation page.
+After entering custom search terms and clicking "Bilder generieren", the user will be forwarded to the image generation page.
 Here the focus lays solely on the images themselves. The uses can watch the images being generated in real time in the center of the screen.
 
 #### Navigation
 
-Images are portrayed on Slides. The user can navigate to the next image on the right or past images on the left either by using the scrollwheel on his mouse or the navigation arrows on the right and left of the image. The user can also simply swipe through them with his mouse or on his phone. While an image is generated this navigation is disabled. After it is done loading the next image will be generated, even if the user still remains on the first image for longer. This enables a better user experience and a seemingly smoother progress.
+Images are portrayed on Slides. The user can navigate to the next image on the right or past images on the left, either by using the scrollwheel on his mouse, or the navigation arrows on the right and left of the image. The user can also simply swipe through them with his mouse or on his phone. While an image is being generated, the navigation is disabled. After it is done loading, the next image will be generated, even if the user still remains on the first image for longer. This enables a better user experience and a smoother progress.
 
 #### Likes
 
-Users can like images by double-clicking on them. This triggers an animation at the respective image. Later a "like" is shown by a yellow frame around the liked image. With each like the application receives feedback about the users preferences and can therefore customize the generated concept art further and further with every iteration towards the ideal image.
+Users can like images by double-clicking on them. This displays an animation over the respective image. Later a "like" is shown by a yellow frame around the liked image. With each like, the application receives feedback about the users preferences, and can therefore customize the generated concept art, further and further with every iteration, towards the ideal image.
 
 <img src="./pictures/WoDone_Loading_Animation.png" alt="WoDone-Logo" width="250"/> 
 <img src="./pictures/WoDone_example_Image.png" alt="WoDone-Logo" width="250"/>
@@ -81,9 +81,9 @@ This is a Google Colab notebook by Max Woolf, however the original method was by
 
 The generative capabilities of this network are extremely impressive. The interaction of the two nets essentially consists of VQGAN generating the images, while CLIP judges how well an image matches our text input.
 
-The Docker-container `wodone_vqgan` frequently checks the WoDone database for ungenerated images. If such are found it instructs the neural network to sequentially generate these images.
+The Docker-container `wodone_vqgan` frequently checks the WoDone database for ungenerated images. If any are found, it instructs the neural network to sequentially generate these images.
 
-New entries of ungenerated Images are added to the database whenever a new image is requested by the user (e.g. when swiping to the next image). The process is depicted in the sequence diagram found in `./pictures/imageRequest.png`.
+New entries of ungenerated Images are added to the database, whenever a new image is requested by the user (e.g. when swiping to the next image). The process is depicted in the sequence diagram found in `./pictures/imageRequest.png`.
 
 <img src="./pictures/imageRequest.png" alt="WoDone-Logo" width="200"/>
 
