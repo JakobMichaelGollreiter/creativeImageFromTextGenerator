@@ -28,9 +28,9 @@ _Note: WoDone is currently only compatible with cuda-caplable Nvidia-GPUs. You c
 
 # Using WoDone
 
-After running `docker-compose up -d` wodone will start on port `8080` on your machine. To use WoDone, connect to `http://ip.adress.of.your.machine:8080` in your webbrowser to view the GUI.
+After running `docker-compose up -d` WoDone will start on port `8080` on your machine. To use WoDone, connect to `http://ip.adress.of.your.machine:8080` in your webbrowser to view the GUI.
 
-You can also integrate WoDone into your application by using the Wodone API.
+You can also integrate WoDone into your application by using the WoDone API.
 
 ## Using the GUI
 
@@ -78,7 +78,7 @@ The generative capabilities of this network are extremely impressive. The intera
 
 The Docker-container `wodone_vqgan` frequently checks the WoDone database for ungenerated images. If such are found it instructs the neural network to sequentially generate these images.
 
-New entries of ungenerated Images are added to the database whenever a new image is requested by the user (e.g. when swiping to the next image the second next image is being requested). The process is depicted in the sequence Diagram found in `./pictures/imageRequest.png`.
+New entries of ungenerated Images are added to the database whenever a new image is requested by the user (e.g. when swiping to the next image). The process is depicted in the sequence diagram found in `./pictures/imageRequest.png`.
 
 <img src="./pictures/imageRequest.png" alt="WoDone-Logo" width="200"/>
 
