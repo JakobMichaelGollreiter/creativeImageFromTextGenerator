@@ -13,12 +13,16 @@ to get started use--> docker-compose up -d
 <!-- Use -->
 ## Use
 
+### Landing Page
+
 The Userinterface is pretty minimalistic and straightforward. 
-In the center search field the user inputs a deliberate number of search terms, which he wants the output theme to focus on. These could literally include any words. Popular examples are landscapes (e.g. "castle", "mountain", "space"), themes (e.g. "medieval", "bloody", "apocalyptic") or characters (e.g. "trolls", "hound"), as well as going as far as simply entering colors.
+In the center search field the user inputs a deliberate number of search terms, which he wants the output theme to focus on. These could literally include any words. Popular examples are landscapes (e.g. "castle", "mountain", "space"), themes (e.g. "medieval", "bloody", "apocalyptic") or characters (e.g. "trolls", "hound"), as well as going as far as simply entering colors. By clicking on the button below the searchbar ("Bilder generieren") the user will be forwarded to the image generation page.
 
 Past searches and their output can be viewed in the search history, just below the searchbar, which also stores already generated images as well as the users reaction to them indicating a "like" with a yellow frame. The history page works just as the main image generation page. The user can still like the images, although these changes will only be visible at the end of the already generated output queue. If this is reached the site will go on generating images depending on the past output just as the main search site does.
 
 The About and Settings pages are self explanatory while the settings have not been completed yet, as thus far they were not necessary for the image generation to work properly. (we by the way encourage to click the link at the bottom of any 404 error page)
+
+<img src="/uploads/a42732ae03707339d0668a068e50a92d/WoDone_Landing_Page.png"  width="920" height="535">
 
 
 <!-- backend readme -->
