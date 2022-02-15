@@ -2,7 +2,7 @@
 
 <img src="./pictures/logo_big.png" alt="WoDone-Logo" width="200"/>
 
-AI-Based generation of exciting concept art and images by the power of your words.
+## AI-Based generation of exciting concept art and images by the power of your own words.
 
 <!-- Requirements and Installation: -->
 
@@ -42,9 +42,13 @@ The About and Settings pages are self explanatory while the settings have not be
 After entering custom search terms and clicking "Bilder generieren" the user will be forwarded to the image generation page.
 Here the focus lays solely on the images themselves. The uses can watch the images being generated in real time in the center of the screen.
 
-### Interaction
+#### Navigation
 
-Images are portrayed on Slides, which the user can scroll through either by using the scrollwheel on his mouse or the navigation arrows on the right and left of the image. While an image is generated this navigation is disabled. After it is done loading the next image will be generated, even if the user still remains on the first image for longer. This enables a better user experience and a seemingly smoother progress.
+Images are portrayed on Slides. The user can navigate to the next image on the right or past images on the left either by using the scrollwheel on his mouse or the navigation arrows on the right and left of the image. The user can also simply swipe through them with his mouse or on his phone. While an image is generated this navigation is disabled. After it is done loading the next image will be generated, even if the user still remains on the first image for longer. This enables a better user experience and a seemingly smoother progress.
+
+#### Likes
+
+Users can like images by double-clicking on them. This triggers an animation at the respective image. Later a "like" is shown by a yellow frame around the liked image. With each like the application receives feedback about the users preferences and can therefore customize the generated concept art further and further with every iteration towards the ideal image.
 
 ## Using the API
 
