@@ -22,7 +22,7 @@ _Note: WoDone is currently only compatible with cuda-caplable Nvidia-GPUs. You c
 
 # Using WoDone
 
-After running `docker-compose up -d` wodone will start on port `8080` on your maschine. To use WoDone, connect to `http://ip.adress.of.your.maschine:8080` in your webbrowser to view the GUI.
+After running `docker-compose up -d` wodone will start on port `8080` on your machine. To use WoDone, connect to `http://ip.adress.of.your.machine:8080` in your webbrowser to view the GUI.
 
 You can also integrate WoDone into your application by using the Wodone API.
 
