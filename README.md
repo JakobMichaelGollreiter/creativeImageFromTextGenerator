@@ -8,6 +8,7 @@
 <img src="./pictures/bild2.png" alt="WoDone-bild2" width="850"/>
 <img src="./pictures/bild3.png" alt="WoDone-bild3" width="850"/>
 <!-- Requirements and Installation: -->
+<br/><br/><br/>
 
 # Requirements and Installation:
 
@@ -22,6 +23,8 @@ To start the containers run `docker-compose up -d`
 _Note: WoDone is currently only compatible with cuda-caplable Nvidia-GPUs. You can modify the docker-compose.yml in order to use CPU compute but this will slow down image generation drasticly, taking as much as an hour or more per image._
 
 <!-- Use -->
+
+<br/><br/>
 
 # Using WoDone
 
@@ -58,6 +61,8 @@ Users can like images by double-clicking on them. This triggers an animation at 
 The WoDone API is documented in the `./swagger.yaml`. It should be pretty self explainatory how to use it.
 
 <!-- backend readme -->
+
+<br/><br/>
 
 # The technology behind it
 
@@ -99,12 +104,15 @@ The further down, the more specific and rich the generated images become.
 <img src="./pictures/Baumstruktur.png"  width="666" height="535">
 
 All search prompts and all information about the images generated thereby (such as the modifiers and wether the image was liked or not) are stored in a database. It's entity relationship diagram is depicted in the file `./erd_from_db.pdf`.
+<br/><br/>
 
 # Contributing
 
 Some usefull imformation for contributing to WoDone can be found in the `./Developers.md`.
 
 <!-- CONTACT -->
+
+<br/><br/>
 
 # Contact us
 
